@@ -1,0 +1,699 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "7cb06ba4-6d4b-4b09-aea4-7cb8b4ce9f2e",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "============================================================="
+          }
+        }
+      ]
+    },
+    {
+      "uid": "fc7b41c5-545f-4aaf-85c4-c4c0e5d9452b",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "Download EOB PDF from SFTP and create PDF data extraction process request\n"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "41d4f189-828a-4b5b-b15b-4622d18d8e82",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "============================================================="
+          }
+        }
+      ]
+    },
+    {
+      "uid": "9c7d78f3-ea11-4fc9-af67-80a33137827f",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "4f6a6db0-e89c-4c7d-aaa0-3153f88d6e70",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Read config"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "eddb25b8-80e1-4f70-907d-19a58fd55502",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": [
+                    {
+                      "key": "iStrConfigFilePath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$iStrConfigFilePath$"
+                      }
+                    }
+                  ]
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Config_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "DICTIONARY",
+            "dictionary": [
+              {
+                "key": "oDictConfigValues",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "pDictConfigValues"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "uid": "4b22a270-1970-432b-9788-81d4b3d0d42a",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Download EOB pdf from SFTP"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "35ba531c-6e77-41ce-8a4a-3d8d16634d59",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": [
+                    {
+                      "key": "iBoolEnableDownload",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "key": "iStrDownloadRemoteFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{InputSftpFolderPath}$"
+                      }
+                    },
+                    {
+                      "key": "iStrDownloadLocalFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{OutputEobPdfFolderPath}$"
+                      }
+                    }
+                  ]
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/SFTP_Download_Upload_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "DICTIONARY",
+            "dictionary": [
+              {
+                "key": "oDictConfigValues",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "pDictConfigValues"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "uid": "a79ce0ea-f974-4aee-aeb1-0f08c56c320e",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Create process request for each EOB pdf data extraction."
+              }
+            }
+          ]
+        },
+        {
+          "uid": "4cf7c394-ccee-4345-902b-1f772618710b",
+          "commandName": "loop.commands.start",
+          "packageName": "Loop",
+          "children": [
+            {
+              "uid": "31a5f963-87b2-4f67-83aa-b992e83390eb",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pDictConfigValues{OutputEobPdfFolderPath}$\\$pStrCurFilename$.$pStrCurFileExtension$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrCurEobPdfFullFilePath"
+              }
+            },
+            {
+              "uid": "ea0f9cdf-7825-4f34-848f-bd7d927f4ce8",
+              "commandName": "assign",
+              "packageName": "File",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceFile",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$pStrCurEobPdfFullFilePath$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pFileEobPdf"
+              }
+            },
+            {
+              "uid": "77ad20a2-9e9f-4e54-9d25-e32cc42da6ae",
+              "commandName": "CreateRequestV2",
+              "packageName": "Process",
+              "disabled": true,
+              "attributes": [
+                {
+                  "name": "groupType",
+                  "value": {
+                    "type": "STRING",
+                    "string": "DEFAULT_GROUP"
+                  }
+                },
+                {
+                  "name": "procDict",
+                  "value": {
+                    "type": "AUTOMATION",
+                    "automation": {
+                      "variables": [
+                        {
+                          "type": "STRING",
+                          "name": "LearningInstanceName",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "LearningInstanceName",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "type": "FILE",
+                          "name": "InputFile",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "InputFile",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "FILE",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "type": "STRING",
+                          "name": "InputFileName",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "InputFileName",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "type": "STRING",
+                          "name": "OutputFolder",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "OutputFolder",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "type": "STRING",
+                          "name": "GroupLabel",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "GroupLabel",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "type": "STRING",
+                          "name": "Version",
+                          "subType": "ANY",
+                          "readOnly": false,
+                          "aariLabel": "Version",
+                          "input": true,
+                          "output": false,
+                          "defaultValue": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        }
+                      ],
+                      "inputVariables": [
+                        {
+                          "key": "LearningInstanceName",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$pDictConfigValues{LearningInstanceName}$"
+                          }
+                        },
+                        {
+                          "key": "InputFile",
+                          "value": {
+                            "type": "FILE",
+                            "expression": "$pFileEobPdf$"
+                          }
+                        },
+                        {
+                          "key": "InputFileName",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$pStrCurFilename$"
+                          }
+                        },
+                        {
+                          "key": "OutputFolder",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$pDictConfigValues{OutputCsvFolderPath}$"
+                          }
+                        }
+                      ],
+                      "outputAnnotations": [],
+                      "inputOptions": [],
+                      "inputData": [],
+                      "previewData": [],
+                      "filePath": {
+                        "type": "STRING",
+                        "string": "repository:///Automation%20Anywhere/Bots/Document%20Workspace%20Processes/Azure%2053%20EOB%20_v1/Azure%2053%20EOB%20_v1"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "loopType",
+              "value": {
+                "type": "STRING",
+                "string": "ITERATOR"
+              }
+            },
+            {
+              "name": "iterator",
+              "returnTo": {
+                "type": "DICTIONARY",
+                "dictionary": [
+                  {
+                    "key": "name",
+                    "value": {
+                      "type": "VARIABLE",
+                      "variableName": "pStrCurFilename"
+                    }
+                  },
+                  {
+                    "key": "extension",
+                    "value": {
+                      "type": "VARIABLE",
+                      "variableName": "pStrCurFileExtension"
+                    }
+                  }
+                ]
+              },
+              "attributes": [
+                {
+                  "name": "folderPath",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pDictConfigValues{OutputEobPdfFolderPath}$"
+                  }
+                }
+              ],
+              "value": {
+                "type": "ITERATOR",
+                "iteratorName": "loop.iterators.files",
+                "packageName": "File"
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "2f495099-d4fc-4b7d-8caa-483da27415b0",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "0b240d0e-4bd0-4fdd-b8df-7188d6539174",
+              "commandName": "messageBox",
+              "packageName": "MessageBox",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "title",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation Anywhere Enterprise Client"
+                  }
+                },
+                {
+                  "name": "content",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ | $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "scrollLines",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "30"
+                  }
+                },
+                {
+                  "name": "closeMsgBox",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "name": "iStrConfigFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pDictConfigValues",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pStrCurFilename",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrCurFileExtension",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrCurEobPdfFullFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pFileEobPdf",
+      "description": "",
+      "type": "FILE",
+      "readOnly": false,
+      "input": false,
+      "output": false
+    }
+  ],
+  "packages": [
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "File",
+      "version": "6.13.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Process",
+      "version": "34.0.25",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.11.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

@@ -1,0 +1,33 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="EOB_TO_EDI_835.AvaloniaUI.App"
+             xmlns:local="using:EOB_TO_EDI_835.AvaloniaUI"
+             xmlns:conv="using:EOB_TO_EDI_835.AvaloniaUI.Converters"
+             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Resources>
+        <conv:FileNameConverter x:Key="FileNameConverter"/>
+        <conv:SuccessIconConverter x:Key="SuccessIconConverter"/>
+        <conv:SuccessColorConverter x:Key="SuccessColorConverter"/>
+        <conv:IsNullConverter x:Key="IsNullConverter"/>
+        <conv:IsNotNullConverter x:Key="IsNotNullConverter"/>
+        <conv:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter"/>
+        <conv:IsZeroConverter x:Key="IsZeroConverter"/>
+        <conv:ComparisonConverter x:Key="ComparisonConverter"/>
+        <conv:ErrorColorConverter x:Key="ErrorColorConverter"/>
+        <conv:HighlightColorConverter x:Key="HighlightColorConverter"/>
+        <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter"/>
+        <conv:BooleanToTextConverter x:Key="BooleanToTextConverter"/>
+    </Application.Resources>
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Amber" />
+    </Application.Styles>
+</Application>

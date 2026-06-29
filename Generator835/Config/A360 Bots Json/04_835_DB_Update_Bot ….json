@@ -1,0 +1,993 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "de70d035-c231-4ae3-84ab-e56ba43558c2",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "b5a2e62a-d08a-41bd-9020-6d8dc7c9cd53",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "=============================================================="
+              }
+            }
+          ]
+        },
+        {
+          "uid": "4b266157-1e46-4f31-b468-a6c0c4c7b079",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "This bot helps to update 'EDI generator' data to Microsoft SQL database"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "efac20bb-3a17-4356-aa7b-f42e75f0f1c9",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "=============================================================="
+              }
+            }
+          ]
+        },
+        {
+          "uid": "4977238c-6814-451e-8bed-33aa4555523a",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "cba170e6-e8c2-4afc-b4a2-5be37edee7ce",
+              "commandName": "Comment",
+              "packageName": "Comment",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "comment",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Get EDI data from payload"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "4a1f63c5-9bf3-4533-a28e-e4aa73318685",
+              "commandName": "StartSession",
+              "packageName": "Json",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "inputType",
+                  "value": {
+                    "type": "STRING",
+                    "string": "text"
+                  }
+                },
+                {
+                  "name": "data",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrEdiDataPayload$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "Default"
+                },
+                "sessionTarget": "LOCAL"
+              }
+            },
+            {
+              "uid": "2e38db3e-b0ff-4762-a693-6a20e03950c8",
+              "commandName": "GetNodeValue",
+              "packageName": "Json",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                },
+                {
+                  "name": "nodePath",
+                  "value": {
+                    "type": "STRING",
+                    "string": "parsed_edi_data"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrParsedEdiData"
+              }
+            },
+            {
+              "uid": "46b03f73-552b-416a-b6c7-1018d710de49",
+              "commandName": "GetNodeValue",
+              "packageName": "Json",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                },
+                {
+                  "name": "nodePath",
+                  "value": {
+                    "type": "STRING",
+                    "string": "validation_errors"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrValidationErrors"
+              }
+            },
+            {
+              "uid": "9512d78a-d3fb-434b-89c1-5e7f7d780026",
+              "commandName": "JSONToDictionary",
+              "packageName": "Json",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pDictPayload"
+              }
+            },
+            {
+              "uid": "e2021172-7e73-4b02-b336-9f6a625ec586",
+              "commandName": "EndSession",
+              "packageName": "Json",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "sessionName": {
+                      "string": "Default",
+                      "type": "STRING"
+                    },
+                    "type": "SESSION"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "ac7664a1-ea3f-4818-809d-0c9ed5212b32",
+              "commandName": "replace",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pDictPayload{\"fileName\"}$"
+                  }
+                },
+                {
+                  "name": "find",
+                  "value": {
+                    "type": "STRING",
+                    "string": ".edi"
+                  }
+                },
+                {
+                  "name": "isCaseSensitive",
+                  "value": {
+                    "type": "STRING",
+                    "string": "false"
+                  }
+                },
+                {
+                  "name": "isRegularExpression",
+                  "value": {
+                    "type": "STRING",
+                    "string": "false"
+                  }
+                },
+                {
+                  "name": "startIndex",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "1"
+                  }
+                },
+                {
+                  "name": "count",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "-1"
+                  }
+                },
+                {
+                  "name": "replaceWith",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrFileName"
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Parse payload and get required data"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "54cc372d-c5c5-4f96-aa7b-80eea5bcce6e",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "1a8fb1b5-cc3e-4523-9035-a50141244e02",
+              "commandName": "runTask",
+              "packageName": "TaskBot",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "taskbot",
+                  "value": {
+                    "type": "TASKBOT",
+                    "taskbotInput": {
+                      "type": "DICTIONARY",
+                      "dictionary": [
+                        {
+                          "key": "iStrConfigFilePath",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$pDictPayload{a360_master_config_path}$"
+                          }
+                        }
+                      ]
+                    },
+                    "taskbotFile": {
+                      "type": "FILE",
+                      "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Config_Bot"
+                    }
+                  }
+                },
+                {
+                  "name": "repeatOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "DO_NOT_REPEAT"
+                  }
+                },
+                {
+                  "name": "delayNextRepetition",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "continueOnError",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "DICTIONARY",
+                "dictionary": [
+                  {
+                    "key": "oDictConfigValues",
+                    "value": {
+                      "type": "VARIABLE",
+                      "variableName": "pDictConfigValues"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Read Config"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "49cd8cd1-1d5b-440b-a29a-d4c37b5de8f6",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "cc4d6aeb-b66b-4e5b-83a7-8baa8086f7d7",
+              "commandName": "Comment",
+              "packageName": "Comment",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "comment",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Convert Boolean variable to "
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "0e957613-0b01-4726-a607-9f8e34297404",
+              "commandName": "if",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "45b62252-d578-43ce-8986-7093bde3b66e",
+                  "commandName": "assignToNumber",
+                  "packageName": "Number",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "input",
+                      "value": {
+                        "type": "NUMBER",
+                        "number": "1"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "pNumValidEdi"
+                  }
+                }
+              ],
+              "branches": [
+                {
+                  "uid": "d2e13356-fcb3-441b-9cc2-1b1052cec067",
+                  "commandName": "else",
+                  "packageName": "If",
+                  "children": [
+                    {
+                      "uid": "bbd6852e-0445-482a-9a3e-27038a39a711",
+                      "commandName": "assignToNumber",
+                      "packageName": "Number",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "input",
+                          "value": {
+                            "type": "NUMBER",
+                            "number": "0"
+                          }
+                        }
+                      ],
+                      "returnTo": {
+                        "type": "VARIABLE",
+                        "variableName": "pNumValidEdi"
+                      }
+                    }
+                  ],
+                  "disabled": false
+                }
+              ],
+              "disabled": false,
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "expression": "$pDictPayload{\"is_valid_edi\"}$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "booleanVariable",
+                    "packageName": "Boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Convert boolean is_valid_edi key to number"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5347ffe3-2f39-4873-bc59-845b0773ae38",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "6cdef65d-1610-4a73-aa42-d00e977ad676",
+              "commandName": "runTask",
+              "packageName": "TaskBot",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "taskbot",
+                  "value": {
+                    "type": "TASKBOT",
+                    "taskbotInput": {
+                      "type": "DICTIONARY",
+                      "dictionary": [
+                        {
+                          "key": "iStrFilePath",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$pDictConfigValues{OutputEobPdfFolderPath}$\\$pStrFileName$.pdf"
+                          }
+                        }
+                      ]
+                    },
+                    "taskbotFile": {
+                      "type": "FILE",
+                      "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Convert_Pdf_File_To_Base64"
+                    }
+                  }
+                },
+                {
+                  "name": "repeatOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "DO_NOT_REPEAT"
+                  }
+                },
+                {
+                  "name": "delayNextRepetition",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "continueOnError",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "DICTIONARY",
+                "dictionary": [
+                  {
+                    "key": "oStrPdfBase64",
+                    "value": {
+                      "type": "VARIABLE",
+                      "variableName": "pStrPdfBase64"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Convert PDF to base64 string"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "8f4ea261-9e3c-4dde-bfbc-e75ba56f25e0",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "06ed67ec-5222-4ec5-9d51-4d55acad61e2",
+              "commandName": "Comment",
+              "packageName": "Comment",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "comment",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Connect to data base and insert payload data"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "bf3e9621-aa6a-4e4e-a90a-2fd158f4437b",
+              "commandName": "connect",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "connectionMode",
+                  "value": {
+                    "type": "STRING",
+                    "string": "USER"
+                  }
+                },
+                {
+                  "name": "databaseProvider",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SQLOLEDB.1"
+                  }
+                },
+                {
+                  "name": "server",
+                  "value": {
+                    "type": "STRING",
+                    "string": "98.110.59.213:61234"
+                  }
+                },
+                {
+                  "name": "database",
+                  "value": {
+                    "type": "STRING",
+                    "string": "VeradigmDB"
+                  }
+                },
+                {
+                  "name": "user",
+                  "value": {
+                    "type": "STRING",
+                    "string": "temp"
+                  }
+                },
+                {
+                  "name": "auth",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation@123"
+                  }
+                },
+                {
+                  "name": "instance",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                },
+                {
+                  "name": "isUserDefinedDriver",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "Default"
+                },
+                "sessionTarget": "LOCAL"
+              }
+            },
+            {
+              "uid": "b9837e8a-fbea-4fd1-b8b2-9c10d9f2818e",
+              "commandName": "insertUpdateDelete",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "query",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "INSERT INTO validation_inprogress_data (\n    pre_validation_parsed_edi_data,\n    updated_edi_data,\n    validation_errors,\n    filename,\n    is_valid_edi,\n    sent_to_validation,\n    is_validated_by_user,\n    timestamp,\npayment_id,\neob_pdf_base64\n)\nVALUES (\n    REPLACE('$pStrParsedEdiData$', '''', ''''''),\n    REPLACE('$pStrParsedEdiData$', '''', ''''''),\n    REPLACE('$pStrValidationErrors$', '''', ''''''),\n    '$pStrFileName$',\n    $pNumValidEdi.Number:toString$,\n    1,\n    0,\n    CONVERT(DATETIME2, '$pDictPayload{\"timestamp\"}$', 127),\n '$pDictPayload{\"payment_id\"}$'\n'$pStrPdfBase64$'\n);"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "368c5082-e842-4779-b229-ebdc46e1bcd7",
+              "commandName": "disconnect",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "dosaveData",
+                  "value": {
+                    "boolean": false,
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "sessionName": {
+                      "string": "Default",
+                      "type": "STRING"
+                    },
+                    "type": "SESSION"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Connect to data base and insert payload data"
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "f731b15f-b82d-4b62-8530-2adaeb3f44a7",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "17ab0bf6-df50-4c58-84a3-979d166a2361",
+              "commandName": "messageBox",
+              "packageName": "MessageBox",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "title",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation Anywhere Enterprise Client"
+                  }
+                },
+                {
+                  "name": "content",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ | $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "scrollLines",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "30"
+                  }
+                },
+                {
+                  "name": "closeMsgBox",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "type": "NUMBER",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleNumber"
+    },
+    {
+      "type": "STRING",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleString"
+    },
+    {
+      "name": "pStrEdiDataPayload",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pDictPayload",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "ANY",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "pNumValidEdi",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pStrParsedEdiData",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrValidationErrors",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pDictConfigValues",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "pStrFileName",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrPdfBase64",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.12.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Database",
+      "version": "5.6.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Json",
+      "version": "1.11.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.11.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

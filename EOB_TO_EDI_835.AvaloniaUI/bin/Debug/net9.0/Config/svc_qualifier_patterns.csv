@@ -1,0 +1,13 @@
+Pattern,Qualifier,Description
+^D\d{4}$,AD,Dental (CDT)
+^\d{5}$,HC,CPT Category I
+^\d{4}[FT]$,HC,CPT Category II or III
+^[A-Z]\d{4}$,HC,HCPCS Level II
+^\d{11}$,N4,NDC (11 digit)
+^\d{5}-\d{4}-\d{2}$,N4,NDC (5-4-2)
+^\d{3,4}$,NU,Revenue Code
+^[A-Z0-9]{5}$,HP,HIPPS / PDPM
+^[A-Z]{2,5}\d{1,6}$ ,ER,WC State Custom
+^\d{1}-\d{5}-\d{5}$,UI,UPC (1-5-5)
+^\d{4}-\d{6}$,N6,NHRIC (4-6)
+^(?=.*\d)[A-Z0-9]{3,10}$,IV,HIEC (Alphanumeric with digit)

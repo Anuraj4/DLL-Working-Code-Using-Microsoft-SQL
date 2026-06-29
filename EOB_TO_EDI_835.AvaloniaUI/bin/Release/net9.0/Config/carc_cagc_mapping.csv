@@ -1,0 +1,93 @@
+ReasonCode,GroupCode,Description
+1,PR,Deductible Amount
+2,PR,Coinsurance Amount
+3,PR,Co-payment Amount
+4,CO,Procedure code inconsistent with modifier
+5,CO,Procedure code/type of bill inconsistent with POS
+6,CO,Procedure/revenue code inconsistent with patient's age
+7,CO,Procedure/revenue code inconsistent with patient's gender
+8,CO,Procedure code inconsistent with provider type/specialty
+9,CO,Diagnosis inconsistent with patient's age
+10,CO,Diagnosis inconsistent with patient's gender
+11,CO,Diagnosis inconsistent with procedure
+12,CO,Diagnosis inconsistent with provider type
+13,CO,Date of death precedes date of service
+14,CO,Date of birth follows date of service
+16,CO,Claim lacks information or has billing error
+18,OA,Exact duplicate claim/service
+19,OA,Work-related injury (Workers' Comp liability)
+20,OA,Injury/illness covered by liability carrier
+21,OA,Injury/illness liability of no-fault carrier
+22,OA,Coordination of Benefits (COB)
+23,OA,Impact of prior payer adjudication
+24,CO,Covered under capitation/managed care plan
+26,PR,Expenses incurred prior to coverage
+27,PR,Expenses incurred after coverage terminated
+29,CO,Time limit for filing has expired
+31,OA,Patient cannot be identified as insured
+32,PR,Patient is not an eligible dependent
+33,PR,Insured has no dependent coverage
+34,PR,Insured has no coverage for newborns
+35,PR,Lifetime benefit maximum reached
+39,CO,Services denied at time of authorization
+40,CO,Charges do not meet qualifications for urgent care
+44,CO,Prompt-pay discount
+45,CO/PR,Charge exceeds fee schedule/allowable
+49,PR,Routine/preventive exam non-covered
+50,CO/PI,Not a medical necessity
+51,PR,Pre-existing condition
+53,PR,Services by immediate relative not covered
+54,CO,Multiple physicians/assistants not covered
+55,CO/PI,Experimental/investigational
+56,CO/PI,Not proven to be effective
+58,CO,Inappropriate or invalid place of service
+59,CO,Processed based on multiple procedure rules
+60,CO,Outpatient charges related to inpatient stay
+61,CO,Failure to obtain second surgical opinion
+66,PR,Blood Deductible
+69,CO,Day outlier amount
+70,CO,Cost outlier - Additional costs adjustment
+85,PR,Patient Interest Adjustment
+90,CO,Ingredient cost adjustment
+94,OA,Processed in Excess of charges
+95,CO,Plan procedures not followed
+96,PR/CO,Non-covered charge(s)
+97,CO,Included in payment for another service (Bundled)
+100,OA,Payment made to patient/insured
+107,CO,Qualifying claim/service not identified
+109,OA,Not covered by this payer; send to correct payer
+119,PR,Benefit maximum for time period reached
+131,CO,Claim specific negotiated discount
+133,OA,Disposition pending further review
+136,OA,Failure to follow prior payer's coverage rules
+139,CO,Contracted funding - Subscriber is provider employee
+146,CO,Diagnosis invalid for dates of service
+150,CO/PI,Information does not support level of service
+181,CO,Procedure code invalid on date of service
+193,OA,Original payment decision maintained
+197,CO,Precertification/Authorization absent
+201,PR,Patient responsible via set-aside arrangement
+204,PR,Service not covered under current benefit plan
+209,OA,Per regulatory agreement (cannot collect from patient)
+229,PR,Partial charge not considered by Medicare
+238,PR,Reduction for ineligible period of coverage
+249,CO,Readmission adjustment
+253,CO,Sequestration - reduction in federal payment
+257,OA,Undetermined during premium grace period
+271,OA,Prior contractual reductions
+275,PR,Prior payer responsibility not covered
+277,OA,Undetermined during SHOP grace period
+278,CO/PI,Performance program requirements not met
+281,CO,Deductible waived per contract
+303,CO,Prior payer responsibility for QMB beneficiaries
+A1,CO/PI,Claim/Service denied (generic)
+B13,OA,Previously paid
+B15,CO,Qualifying service not received/adjudicated
+P2,OA,Not a work-related injury (Auto/Other)
+P3,PR,Workers' Comp case settled (Set-aside)
+P11,OA,Pending due to litigation
+P12,CO,Workers' Comp jurisdictional fee schedule adj
+P16,CO/OA,Provider not authorized for injured workers
+P24,CO,Payment adjusted based on PPO
+P25,CO,Payment adjusted based on MPN
+P26,CO,Payment adjusted based on VPN

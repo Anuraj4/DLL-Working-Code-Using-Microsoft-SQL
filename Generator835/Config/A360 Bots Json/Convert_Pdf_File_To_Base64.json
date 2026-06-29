@@ -1,0 +1,284 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "79052520-527e-4ad8-963b-8ed479ae056a",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "========================================================"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "5a0deb43-159b-40e2-8a46-65209bacecaf",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "This bot helps to convert  give pdf to  base64 string"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "72212dc2-4fe8-4b7b-be8b-c6793ca6acb1",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "========================================================"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "6ba0724b-72ba-4e5c-8f05-87eae36265da",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "a237eebe-71fa-4f35-82c5-0668f65f239f",
+          "commandName": "vbscript.commands.openScript",
+          "packageName": "VBScript",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "session",
+              "value": {
+                "type": "STRING",
+                "string": "Default"
+              }
+            },
+            {
+              "name": "scriptOption",
+              "value": {
+                "type": "STRING",
+                "string": "SCRIPT"
+              }
+            },
+            {
+              "name": "script",
+              "value": {
+                "type": "STRING",
+                "string": "Function PDFToBase64(pdfFilePath)\n    Dim objStream, objXML, objNode\n    \n    \n    Set objStream = CreateObject(\"ADODB.Stream\")\n    objStream.Type = 1\n    objStream.Open\n    objStream.LoadFromFile pdfFilePath\n    \n    \n    Set objXML = CreateObject(\"MSXML2.DOMDocument.3.0\")\n    Set objNode = objXML.CreateElement(\"Base64Data\")\n    objNode.DataType = \"bin.base64\"\n    objNode.nodeTypedValue = objStream.Read\n    \n    \n    PDFToBase64 = Replace(Replace(objNode.text, vbCrLf, \"\"), vbLf, \"\")\n    \n    \n    objStream.Close\n    Set objStream = Nothing\n    Set objNode = Nothing\n    Set objXML = Nothing\nEnd Function"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5f32b10d-d8c0-42ad-97c3-d07b92489050",
+          "commandName": "vbscript.commands.executeFunction",
+          "packageName": "VBScript",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "session",
+              "value": {
+                "type": "STRING",
+                "string": "Default"
+              }
+            },
+            {
+              "name": "functionName",
+              "value": {
+                "type": "STRING",
+                "string": "PDFToBase64"
+              }
+            },
+            {
+              "name": "arguments",
+              "value": {
+                "type": "VARIABLE",
+                "variableName": "iStrFilePath"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "oStrPdfBase64"
+          }
+        },
+        {
+          "uid": "b17fde3b-09cf-4e0b-812e-6d4a32173fe5",
+          "commandName": "vbscript.commands.closeScript",
+          "packageName": "VBScript",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "session",
+              "value": {
+                "string": "Default",
+                "type": "STRING"
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "cf32a22d-bb80-42c6-9f1e-9f93bed50fbf",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "7ffa4f0d-9bbd-48d0-879f-c5f698879650",
+              "commandName": "throw",
+              "packageName": "ErrorHandler",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "message",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ | $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "type": "STRING",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleString"
+    },
+    {
+      "name": "iStrFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "oStrPdfBase64",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": true,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "VBScript",
+      "version": "2.21.1",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

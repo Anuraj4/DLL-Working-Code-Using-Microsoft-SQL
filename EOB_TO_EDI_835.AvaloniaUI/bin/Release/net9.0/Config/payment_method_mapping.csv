@@ -1,0 +1,8 @@
+PaymentMethodText,BPR04Code,Description
+ACH,ACH,Automated Clearing House
+CHECK,CHK,Check (paper)
+Virtual Card,NON,Non-Payment Data (Virtual Card/EPC)
+EPC Draft,NON,Electronic Payment Claim Draft
+Wire,BOP,Financial Institution Option
+DRAFT,CHK,Bank Draft treated as Check
+EFT,ACH,Electronic Funds Transfer → ACH

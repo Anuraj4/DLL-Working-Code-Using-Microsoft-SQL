@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Xalta.Edi.LicenseProvider/1.0.0": {
+        "dependencies": {
+          "EdiFabric": "10.7.6"
+        },
+        "runtime": {
+          "Xalta.Edi.LicenseProvider.dll": {}
+        }
+      },
+      "EdiFabric/10.7.6": {
+        "runtime": {
+          "lib/net9.0/EdiFabric.dll": {
+            "assemblyVersion": "10.7.6.0",
+            "fileVersion": "10.7.6.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Xalta.Edi.LicenseProvider/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "EdiFabric/10.7.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HHgSXoMZlVTAyWGthzEqsiCIrgnY76yxx+jDvu3MjlJ3Khm6vNfk+45V+hk5tWMdihl25Z+oO6lmJZ2yOpXd5g==",
+      "path": "edifabric/10.7.6",
+      "hashPath": "edifabric.10.7.6.nupkg.sha512"
+    }
+  }
+}

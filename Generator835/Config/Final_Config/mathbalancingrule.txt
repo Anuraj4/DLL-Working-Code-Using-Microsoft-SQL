@@ -1,0 +1,302 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Serilog;
+using Edi.Generator835.Models;
+using Xalta.Edi.BalancingValidation.Core;
+using Xalta.Edi.BalancingValidation.Interfaces;
+
+namespace Edi.Generator835.Rules
+{
+    /// <summary>
+    /// Rule that ensures financial balancing between Billed, Paid, and Adjustments.
+    /// Invariant enforced: Billed = Paid + SUM(all adjustments)
+    ///
+    /// Fix log vs original:
+    ///   [1] PR-2 capped so PR-3 + PR-1 + PR-2 never exceeds patientGap (no negative coinsurance).
+    ///   [2] Execute() now calls BalanceServiceLine() so the rule engine actually does work.
+    ///   [3] Zero/missing LineAllowedAmount is guarded; patientGap floor is 0.
+    ///   [4] OA group adjustments are preserved alongside CO group adjustments.
+    ///   [5] Null guard on line.Adjustments prevents NullReferenceException.
+    ///   [6] co45 is mutated on a cloned object to avoid corrupting upstream references.
+    ///   [7] All decimal arithmetic is rounded to 2 dp throughout (X12 835 requirement).
+    ///   [8] Negative contractualGap (overpayment) is detected, logged, and handled via OA-23.
+    ///   [9] CO-253 double-subtraction is guarded: amount is clamped to contractualGap.
+    /// </summary>
+    public class MathBalancingRule : IRuleDefinition
+    {
+        private readonly IBalancingFixer _fixer;
+
+        public string Name => "Math Balancing Rule";
+        public int Priority => 10;
+        public string TargetField => "SERVICE_LINE_ADJUSTMENTS";
+
+        public MathBalancingRule(IBalancingFixer? fixer = null)
+        {
+            _fixer = fixer ?? new BalancingFixer();
+        }
+
+        public bool CanExecute(RuleExecutionContext context) =>
+            context.TargetField == TargetField;
+
+        /// <summary>
+        /// Fix [2]: Execute() now resolves the ServiceLineData from context and calls
+        /// BalanceServiceLine(), writing the corrected adjustments back into the model.
+        /// Returns "BALANCED" on success or "BALANCE_FAILED" if the post-check fails.
+        /// </summary>
+        public string? Execute(RuleExecutionContext context)
+        {
+            if (context.ServiceLine is not ServiceLineData line)
+            {
+                Log.Warning("[Balancing] Execute called but context.ServiceLine is null or wrong type.");
+                return "SKIPPED";
+            }
+
+            var balanced = BalanceServiceLine(line);
+            line.Adjustments = balanced;
+
+            decimal newSum = R(balanced.Sum(a => a.AdjustmentAmount));
+            bool ok = _fixer.IsBalanced(R(line.LineBilledAmount), R(line.LinePaidAmount), newSum);
+
+            return ok ? "BALANCED" : "BALANCE_FAILED";
+        }
+
+        /// <summary>
+        /// Re-builds the adjustment list for a service line so that:
+        ///   Billed = Paid + SUM(adjustments)
+        ///
+        /// Adjustment priority order:
+        ///   CO-253  Sequestration
+        ///   PR-3    Copay
+        ///   PR-1    Deductible
+        ///   PR-2    Coinsurance  (absorbs remaining patient gap)
+        ///   CO/OA-* Other original non-45 contractual/other adjustments
+        ///   CO-45   Contractual write-off (positive residual)
+        ///   OA-23   Other adjustment (negative residual / overpayment)
+        /// </summary>
+        public List<AdjustmentData> BalanceServiceLine(ServiceLineData line)
+        {
+            // Fix [5]: null guard on Adjustments
+            line.Adjustments ??= new List<AdjustmentData>();
+
+            decimal charge  = R(line.LineBilledAmount);
+            decimal paid    = R(line.LinePaidAmount);
+            decimal allowed = R(line.LineAllowedAmount);
+
+            // Fix [3]: if allowed is missing/zero, fall back to paid so patientGap = 0
+            //          rather than producing a large negative patient responsibility.
+            if (allowed == 0m && paid > 0m)
+            {
+                Log.Warning("[Balancing] LineAllowedAmount is 0 for CPT={CPT}. Defaulting allowed=paid to avoid negative PR.", line.CptCode);
+                allowed = paid;
+            }
+
+            decimal currentAdjSum = R(line.Adjustments.Sum(a => a.AdjustmentAmount));
+            bool alreadyBalanced  = _fixer.IsBalanced(charge, paid, currentAdjSum);
+
+            Log.Information(
+                "[Balancing] CPT={CPT} Billed={Billed} Paid={Paid} Allowed={Allowed} " +
+                "ExistingAdjSum={Sum} AlreadyBalanced={Balanced}",
+                line.CptCode, charge, paid, allowed, currentAdjSum, alreadyBalanced);
+
+            if (alreadyBalanced)
+                return line.Adjustments.ToList();
+
+            // ── Gap calculations ──────────────────────────────────────────────────────
+            decimal contractualGap = R(charge - allowed);   // total CO/OA responsibility
+            decimal patientGap     = R(allowed - paid);     // total PR responsibility
+
+            // Fix [3]: floor patientGap at 0; negative means overpayment — handled below.
+            if (patientGap < 0m)
+            {
+                Log.Warning("[Balancing] Negative patientGap ({PR}) for CPT={CPT}. Possible overpayment on allowed.", patientGap, line.CptCode);
+                patientGap = 0m;
+            }
+
+            // Fix [8]: negative contractualGap = payer paid MORE than billed; log it.
+            if (contractualGap < 0m)
+            {
+                Log.Warning("[Balancing] Negative contractualGap ({CO}) for CPT={CPT}. Overpayment scenario.", contractualGap, line.CptCode);
+            }
+
+            Log.Debug("[Balancing] Initial gaps — Contractual={CO}, Patient={PR}", contractualGap, patientGap);
+
+            // ── Locate original special-purpose adjustments ───────────────────────────
+            var originalAdjustments = line.Adjustments.ToList();
+            var sequestrationAdj    = originalAdjustments.FirstOrDefault(a => a.AdjustmentReasonCode == "253");
+            var copayAdj            = originalAdjustments.FirstOrDefault(a => a.AdjustmentReasonCode == "3");
+            var deductibleAdj       = originalAdjustments.FirstOrDefault(a => a.AdjustmentReasonCode == "1");
+            var coinsuranceAdj      = originalAdjustments.FirstOrDefault(a => a.AdjustmentReasonCode == "2");
+
+            var finalAdjustments = new List<AdjustmentData>();
+
+            // ── Step 1: Sequestration CO-253 ─────────────────────────────────────────
+            // Fix [9]: clamp co253Amount to contractualGap so we never over-subtract.
+            decimal co253Amount = R(sequestrationAdj?.AdjustmentAmount ?? 0m);
+            if (co253Amount != 0m)
+            {
+                // Clamp to remaining contractual gap (absolute value to handle negative gap edge case)
+                co253Amount = Math.Min(Math.Abs(co253Amount), Math.Abs(contractualGap))
+                              * Math.Sign(co253Amount);
+                co253Amount = R(co253Amount);
+
+                if (co253Amount != 0m)
+                {
+                    finalAdjustments.Add(CreateAdj(line, "CO", "253", co253Amount));
+                    contractualGap = R(contractualGap - co253Amount);
+                }
+            }
+
+            // ── Step 2: Patient Responsibility splitting ─────────────────────────────
+            // Fix [1]: each PR amount is clamped to remainingPr so the total PR never
+            //          exceeds patientGap and PR-2 can never go negative.
+            decimal remainingPr = patientGap;
+
+            // PR-3 Copay
+            decimal pr3Amount = R(copayAdj?.AdjustmentAmount ?? 0m);
+            if (pr3Amount != 0m)
+            {
+                pr3Amount = Math.Min(pr3Amount, remainingPr);   // clamp
+                if (pr3Amount > 0m)
+                {
+                    finalAdjustments.Add(CreateAdj(line, "PR", "3", pr3Amount));
+                    remainingPr = R(remainingPr - pr3Amount);
+                }
+            }
+
+            // PR-1 Deductible
+            decimal pr1Amount = R(deductibleAdj?.AdjustmentAmount ?? 0m);
+            if (pr1Amount != 0m)
+            {
+                pr1Amount = Math.Min(pr1Amount, remainingPr);   // clamp
+                if (pr1Amount > 0m)
+                {
+                    finalAdjustments.Add(CreateAdj(line, "PR", "1", pr1Amount));
+                    remainingPr = R(remainingPr - pr1Amount);
+                }
+            }
+
+            // PR-2 Coinsurance — absorbs whatever patient gap remains
+            // Fix [1]: remainingPr is always >= 0 here, so PR-2 is never negative.
+            if (remainingPr != 0m)
+            {
+                finalAdjustments.Add(CreateAdj(line, "PR", "2", remainingPr));
+            }
+
+            // ── Step 3: Other CO and OA adjustments (preserve originals) ─────────────
+            // Fix [4]: include both CO and OA group adjustments (not just CO).
+            var otherAdjs = originalAdjustments
+                .Where(a =>
+                    (a.AdjustmentGroupCode == "CO" || a.AdjustmentGroupCode == "OA") &&
+                    a.AdjustmentReasonCode != "253" &&   // already handled
+                    a.AdjustmentReasonCode != "45"  &&   // will be recalculated
+                    a.AdjustmentReasonCode != "23")      // will be recalculated
+                .ToList();
+
+            foreach (var other in otherAdjs)
+            {
+                finalAdjustments.Add(CloneAdj(other));
+                contractualGap = R(contractualGap - other.AdjustmentAmount);
+            }
+
+            // ── Step 4: Residual contractual gap via CO-45 / OA-23 ───────────────────
+            decimal finalGap = R(contractualGap);
+
+            if (finalGap > 0m)
+            {
+                // Normal write-off — use CO-45
+                finalAdjustments.Add(CreateAdj(line, "CO", "45", finalGap));
+            }
+            else if (finalGap < 0m)
+            {
+                // Fix [6]: operate on a cloned CO-45 so we never mutate objects
+                //          that may be referenced elsewhere.
+                var existingCo45 = finalAdjustments.FirstOrDefault(a =>
+                    a.AdjustmentGroupCode == "CO" && a.AdjustmentReasonCode == "45");
+
+                if (existingCo45 != null)
+                {
+                    // Replace with a clone carrying the adjusted amount
+                    decimal newAmount = R(existingCo45.AdjustmentAmount + finalGap);
+                    finalAdjustments.Remove(existingCo45);
+                    if (newAmount != 0m)
+                        finalAdjustments.Add(CreateAdj(line, "CO", "45", newAmount));
+                }
+                else
+                {
+                    // Fix [8]: overpayment — record as OA-23 with the negative amount
+                    finalAdjustments.Add(CreateAdj(line, "OA", "23", finalGap));
+                }
+            }
+            // finalGap == 0 → perfectly balanced; no extra segment needed.
+
+            // ── Final validation ──────────────────────────────────────────────────────
+            decimal newSum = R(finalAdjustments.Sum(a => a.AdjustmentAmount));
+            bool balanced  = _fixer.IsBalanced(charge, paid, newSum);
+
+            if (!balanced)
+            {
+                Log.Error(
+                    "[Balancing-FAILURE] Still unbalanced after rebuild. " +
+                    "CPT={CPT} Billed={Billed} Paid={Paid} AdjSum={Sum} Diff={Diff}",
+                    line.CptCode, charge, paid, newSum, R(charge - paid - newSum));
+
+                Log.Error(
+                    "[Balancing-FAILURE] Inputs — PatientGap={PR} Sequestration={CO253} " +
+                    "ContractualGap={CO} FinalResidual={Gap}",
+                    patientGap, co253Amount, contractualGap, finalGap);
+            }
+            else
+            {
+                Log.Information(
+                    "[Balancing] CPT={CPT} successfully balanced. AdjCount={Count} AdjSum={Sum}",
+                    line.CptCode, finalAdjustments.Count, newSum);
+            }
+
+            return finalAdjustments;
+        }
+
+        // ── Helpers ───────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Fix [7]: central rounding helper — all monetary values are rounded to 2 dp
+        /// before being written to the 835, matching X12 EDI spec requirements.
+        /// </summary>
+        private static decimal R(decimal value) => Math.Round(value, 2, MidpointRounding.AwayFromZero);
+
+        /// <summary>
+        /// Creates a new AdjustmentData using the service line as a metadata source.
+        /// Fix [7]: amount is rounded to 2 dp on creation.
+        /// </summary>
+        private AdjustmentData CreateAdj(ServiceLineData line, string group, string reason, decimal amount)
+        {
+            var template = line.Adjustments?.FirstOrDefault();
+            return new AdjustmentData
+            {
+                AdjustmentGroupCode  = group,
+                AdjustmentReasonCode = reason,
+                AdjustmentAmount     = R(amount),
+                AdjustmentLevel      = "SERVICE_LINE",
+                PaymentId            = template?.PaymentId    ?? string.Empty,
+                ClaimIdPayer         = template?.ClaimIdPayer ?? string.Empty,
+                CptCode              = line.CptCode
+            };
+        }
+
+        /// <summary>
+        /// Fix [6]: returns a shallow clone of an existing AdjustmentData so that
+        /// any downstream mutation does not affect the original object reference.
+        /// </summary>
+        private static AdjustmentData CloneAdj(AdjustmentData src) =>
+            new AdjustmentData
+            {
+                AdjustmentGroupCode  = src.AdjustmentGroupCode,
+                AdjustmentReasonCode = src.AdjustmentReasonCode,
+                AdjustmentAmount     = R(src.AdjustmentAmount),
+                AdjustmentLevel      = src.AdjustmentLevel,
+                PaymentId            = src.PaymentId,
+                ClaimIdPayer         = src.ClaimIdPayer,
+                CptCode              = src.CptCode
+            };
+    }
+}

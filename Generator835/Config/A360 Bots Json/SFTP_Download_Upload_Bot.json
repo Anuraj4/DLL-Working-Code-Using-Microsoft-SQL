@@ -1,0 +1,1143 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "305e62ba-e936-47d4-9922-64cab8174d5a",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "================================================================="
+          }
+        }
+      ]
+    },
+    {
+      "uid": "9d240b8b-946d-419a-9f2f-3fc93b9ebcba",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "SFTP File Upload and Download Bot(Upload/Download to WebDav Server)"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "3fd55a00-5e6a-4830-8251-afde8ecf58f5",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "================================================================="
+          }
+        }
+      ]
+    },
+    {
+      "uid": "8c699e30-1da0-43c6-9050-f5a203b01d3e",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "36eb3933-4c0d-44fe-8586-525d3f3c7c06",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "76a80616-f7dc-4a3d-9827-2f91fcbe44bb",
+              "commandName": "runTask",
+              "packageName": "TaskBot",
+              "disabled": true,
+              "attributes": [
+                {
+                  "name": "taskbot",
+                  "value": {
+                    "type": "TASKBOT",
+                    "taskbotInput": {
+                      "type": "DICTIONARY",
+                      "dictionary": [
+                        {
+                          "key": "iStrConfigFilePath",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$iStrConfigFilePath$"
+                          }
+                        }
+                      ]
+                    },
+                    "taskbotFile": {
+                      "type": "FILE",
+                      "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Config_Bot"
+                    }
+                  }
+                },
+                {
+                  "name": "repeatOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "DO_NOT_REPEAT"
+                  }
+                },
+                {
+                  "name": "delayNextRepetition",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "continueOnError",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "DICTIONARY",
+                "dictionary": [
+                  {
+                    "key": "oDictConfigValues",
+                    "value": {
+                      "type": "VARIABLE",
+                      "variableName": "iDictConfigValues"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "uid": "176259a7-668f-494f-bfc6-03217bd1b5ba",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$iDictConfigValues{DownloadRemoteFolderPath}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "iStrDownloadRemoteFolderPath"
+              }
+            },
+            {
+              "uid": "df4d9de2-dc1c-45c3-928f-87a1a3d8c490",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$iDictConfigValues{DownloadLocalFolderPath}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "iStrDownloadLocalFolderPath"
+              }
+            },
+            {
+              "uid": "dd871d9f-ae52-468d-96e5-d8be6e6d3002",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$iDictConfigValues{UploadRemoteFolderPath}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "iStrUploadRemoteFolderPath"
+              }
+            },
+            {
+              "uid": "6b174eb5-25b7-49a2-837d-03d8ab2bbc88",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$iDictConfigValues{UploadLocalFolderPath}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "iStrUploadLocalFolderPath"
+              }
+            }
+          ],
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Read Config"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "810ce0fc-84d8-4347-9340-8b5c621d0718",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "026c0b95-7acf-4580-bfe3-597a86109814",
+              "commandName": "python.commands.openScript",
+              "packageName": "Python",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "scriptOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "FILE"
+                  }
+                },
+                {
+                  "name": "file",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$iStrPythonScriptPath$"
+                  }
+                },
+                {
+                  "name": "version",
+                  "value": {
+                    "type": "STRING",
+                    "string": "3"
+                  }
+                },
+                {
+                  "name": "pythonInterpreterPath",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "Default"
+                },
+                "sessionTarget": "LOCAL"
+              }
+            },
+            {
+              "uid": "ed2102ac-0b9a-4359-945b-ed3ff498b2b8",
+              "commandName": "if",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "660e7401-8524-41f3-a1a0-2730c60471f6",
+                  "commandName": "if",
+                  "packageName": "If",
+                  "children": [
+                    {
+                      "uid": "fc380774-cc1a-4a75-92e8-26b3163ca35a",
+                      "commandName": "addItem",
+                      "packageName": "List",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "sourceList",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "listItem",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "iStrDownloadRemoteFolderPath"
+                          }
+                        },
+                        {
+                          "name": "itemPosition",
+                          "value": {
+                            "type": "STRING",
+                            "string": "ANY"
+                          }
+                        },
+                        {
+                          "name": "positionNumber",
+                          "value": {
+                            "type": "NUMBER",
+                            "number": "0"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "uid": "2c5b9382-7633-4a63-848a-51f2608d59dc",
+                      "commandName": "addItem",
+                      "packageName": "List",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "sourceList",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "listItem",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "iStrDownloadLocalFolderPath"
+                          }
+                        },
+                        {
+                          "name": "itemPosition",
+                          "value": {
+                            "type": "STRING",
+                            "string": "ANY"
+                          }
+                        },
+                        {
+                          "name": "positionNumber",
+                          "value": {
+                            "type": "NUMBER",
+                            "number": "1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "uid": "11ca14f1-e9ce-4288-b005-b9f90a6df558",
+                      "commandName": "python.commands.executeFunction",
+                      "packageName": "Python",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "session",
+                          "value": {
+                            "type": "SESSION",
+                            "sessionName": {
+                              "type": "STRING",
+                              "string": "Default"
+                            }
+                          }
+                        },
+                        {
+                          "name": "functionName",
+                          "value": {
+                            "type": "STRING",
+                            "string": "run_download"
+                          }
+                        },
+                        {
+                          "name": "argument",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "exactMessage",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": false
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "branches": [],
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "attributes": [
+                        {
+                          "name": "variable",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$iStrDownloadLocalFolderPath$"
+                          }
+                        },
+                        {
+                          "name": "operator",
+                          "value": {
+                            "type": "STRING",
+                            "string": "NEQ"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "name": "matchCase",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": true
+                          }
+                        },
+                        {
+                          "name": "isIgnoreCarriage",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": false
+                          }
+                        }
+                      ],
+                      "operatorAttribute": {
+                        "operator": "AND",
+                        "attributes": [
+                          {
+                            "name": "variable",
+                            "value": {
+                              "type": "STRING",
+                              "expression": "$iStrDownloadRemoteFolderPath$"
+                            }
+                          },
+                          {
+                            "name": "operator",
+                            "value": {
+                              "type": "STRING",
+                              "string": "NEQ"
+                            }
+                          },
+                          {
+                            "name": "value",
+                            "value": {
+                              "type": "STRING",
+                              "string": ""
+                            }
+                          },
+                          {
+                            "name": "matchCase",
+                            "value": {
+                              "type": "BOOLEAN",
+                              "boolean": true
+                            }
+                          },
+                          {
+                            "name": "isIgnoreCarriage",
+                            "value": {
+                              "type": "BOOLEAN",
+                              "boolean": false
+                            }
+                          }
+                        ],
+                        "value": {
+                          "type": "CONDITIONAL",
+                          "conditionalName": "stringVariable",
+                          "packageName": "String"
+                        }
+                      },
+                      "name": "condition",
+                      "value": {
+                        "type": "CONDITIONAL",
+                        "conditionalName": "stringVariable",
+                        "packageName": "String"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "branches": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "expression": "$iBoolEnableDownload$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "booleanVariable",
+                    "packageName": "Boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "04fe7713-6236-4e48-a869-4974d6043d51",
+              "commandName": "if",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "4bf105d9-c9ef-4aa4-92c0-140496790040",
+                  "commandName": "if",
+                  "packageName": "If",
+                  "children": [
+                    {
+                      "uid": "582e41be-9fb3-400f-86fa-7f82d4147d5d",
+                      "commandName": "addItem",
+                      "packageName": "List",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "sourceList",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "listItem",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "iStrUploadRemoteFolderPath"
+                          }
+                        },
+                        {
+                          "name": "itemPosition",
+                          "value": {
+                            "type": "STRING",
+                            "string": "ANY"
+                          }
+                        },
+                        {
+                          "name": "positionNumber",
+                          "value": {
+                            "type": "NUMBER",
+                            "number": "0"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "uid": "9ce73c80-0a94-4f79-9e1f-95b5f8fd1299",
+                      "commandName": "addItem",
+                      "packageName": "List",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "sourceList",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "listItem",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "iStrUploadLocalFolderPath"
+                          }
+                        },
+                        {
+                          "name": "itemPosition",
+                          "value": {
+                            "type": "STRING",
+                            "string": "ANY"
+                          }
+                        },
+                        {
+                          "name": "positionNumber",
+                          "value": {
+                            "type": "NUMBER",
+                            "number": "1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "uid": "520df0f9-83ed-4059-9acc-408352cf237c",
+                      "commandName": "python.commands.executeFunction",
+                      "packageName": "Python",
+                      "disabled": false,
+                      "attributes": [
+                        {
+                          "name": "session",
+                          "value": {
+                            "type": "SESSION",
+                            "sessionName": {
+                              "type": "STRING",
+                              "string": "Default"
+                            }
+                          }
+                        },
+                        {
+                          "name": "functionName",
+                          "value": {
+                            "type": "STRING",
+                            "string": "run_upload"
+                          }
+                        },
+                        {
+                          "name": "argument",
+                          "value": {
+                            "type": "VARIABLE",
+                            "variableName": "pListDownloadInput"
+                          }
+                        },
+                        {
+                          "name": "exactMessage",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": false
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "branches": [],
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "attributes": [
+                        {
+                          "name": "variable",
+                          "value": {
+                            "type": "STRING",
+                            "expression": "$iStrUploadLocalFolderPath$"
+                          }
+                        },
+                        {
+                          "name": "operator",
+                          "value": {
+                            "type": "STRING",
+                            "string": "NEQ"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "type": "STRING",
+                            "string": ""
+                          }
+                        },
+                        {
+                          "name": "matchCase",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": true
+                          }
+                        },
+                        {
+                          "name": "isIgnoreCarriage",
+                          "value": {
+                            "type": "BOOLEAN",
+                            "boolean": false
+                          }
+                        }
+                      ],
+                      "operatorAttribute": {
+                        "operator": "AND",
+                        "attributes": [
+                          {
+                            "name": "variable",
+                            "value": {
+                              "type": "STRING",
+                              "expression": "$iStrUploadRemoteFolderPath$"
+                            }
+                          },
+                          {
+                            "name": "operator",
+                            "value": {
+                              "type": "STRING",
+                              "string": "NEQ"
+                            }
+                          },
+                          {
+                            "name": "value",
+                            "value": {
+                              "type": "STRING",
+                              "string": ""
+                            }
+                          },
+                          {
+                            "name": "matchCase",
+                            "value": {
+                              "type": "BOOLEAN",
+                              "boolean": true
+                            }
+                          },
+                          {
+                            "name": "isIgnoreCarriage",
+                            "value": {
+                              "type": "BOOLEAN",
+                              "boolean": false
+                            }
+                          }
+                        ],
+                        "value": {
+                          "type": "CONDITIONAL",
+                          "conditionalName": "stringVariable",
+                          "packageName": "String"
+                        }
+                      },
+                      "name": "condition",
+                      "value": {
+                        "type": "CONDITIONAL",
+                        "conditionalName": "stringVariable",
+                        "packageName": "String"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "branches": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "variable",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "expression": "$iBoolEnableUpload$"
+                      }
+                    },
+                    {
+                      "name": "operator",
+                      "value": {
+                        "type": "STRING",
+                        "string": "EQ"
+                      }
+                    },
+                    {
+                      "name": "value",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "booleanVariable",
+                    "packageName": "Boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "ae3e9b6b-a333-44dd-be23-2ec30f29d8c7",
+              "commandName": "python.commands.closeScript",
+              "packageName": "Python",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "sessionName": {
+                      "string": "Default",
+                      "type": "STRING"
+                    },
+                    "type": "SESSION"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Call python script to download and upload files to WebDav server"
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "c31d9554-79fe-4681-95d9-9a81077cd87d",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "23882ee3-3a35-448b-97da-97579e2421c9",
+              "commandName": "messageBox",
+              "packageName": "MessageBox",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "title",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation Anywhere Enterprise Client"
+                  }
+                },
+                {
+                  "name": "content",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "STFP Bot Error: $pStrErrorMessage$ | $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "scrollLines",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "30"
+                  }
+                },
+                {
+                  "name": "closeMsgBox",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                },
+                {
+                  "name": "timeOut",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "5"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "22c26dec-f700-4b4b-a8eb-2055334a32bf",
+              "commandName": "throw",
+              "packageName": "ErrorHandler",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "message",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ | $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "type": "NUMBER",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleNumber"
+    },
+    {
+      "type": "STRING",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleString"
+    },
+    {
+      "name": "pListDownloadInput",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "LIST",
+        "list": [
+          {
+            "type": "STRING",
+            "string": "835s"
+          },
+          {
+            "type": "STRING",
+            "string": "C:\\\\Users\\\\Anand\\\\OneDrive - Xalta Technology Services Pvt Ltd\\\\Desktop\\\\Magnolia_ProjectWork\\\\PythonScripts\\\\WebDavOutput"
+          }
+        ]
+      }
+    },
+    {
+      "name": "iStrConfigFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "iDictConfigValues",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "iBoolEnableUpload",
+      "description": "",
+      "type": "BOOLEAN",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "BOOLEAN",
+        "boolean": false
+      }
+    },
+    {
+      "name": "iBoolEnableDownload",
+      "description": "",
+      "type": "BOOLEAN",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "BOOLEAN",
+        "boolean": false
+      }
+    },
+    {
+      "name": "iStrDownloadRemoteFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "iStrDownloadLocalFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "iStrUploadRemoteFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "iStrUploadLocalFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "iStrPythonScriptPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Boolean",
+      "version": "2.12.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "List",
+      "version": "2.15.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Python",
+      "version": "2.20.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.11.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

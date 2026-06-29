@@ -1,0 +1,1641 @@
+================================================================================
+                    GENERATOR835 RULES FOLDER DOCUMENTATION
+================================================================================
+Complete analysis of all .cs files in the Rules folder with descriptions of 
+their functionality, purpose, and integration within the EDI generation system.
+
+Generated: May 5, 2026
+Total Files: 27
+
+================================================================================
+                         TABLE OF CONTENTS
+================================================================================
+1. CORE INFRASTRUCTURE RULES
+2. DATA TRANSFORMATION & MAPPING RULES
+3. SERVICE & PROCEDURE CODE RULES
+4. IDENTIFICATION RULES
+5. COMMUNICATION & CONTACT RULES
+6. DATE & PAYMENT RULES
+7. DATA VALIDATION & BALANCING RULES
+8. CONDITIONAL & FALLBACK RULES
+9. SPECIALIZED RULES
+10. SYSTEM ARCHITECTURE OVERVIEW
+
+================================================================================
+SECTION 1: CORE INFRASTRUCTURE RULES
+================================================================================
+
+FILE: IRuleDefinition.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Core interface and context classes for the rules engine
+DESCRIPTION:
+  This file defines the fundamental contracts for the rules system:
+  
+  - IRuleDefinition Interface:
+    * Name (string): Human-readable name for logging/debugging
+    * Priority (int): Execution order - lower priority = executes first
+    * TargetField (string): EDI field targeted (e.g., "BPR04", "CLP02", "CAS01")
+                            Use "*" for rules applying to any field
+    * CanExecute(context): Determines if rule can execute in current context
+    * Execute(context): Executes rule and returns determined value
+                        Return null to pass to next rule
+  
+  - RuleExecutionContext Class:
+    * TargetField (string): EDI field being determined
+    * RawValue (string): Raw value from EOB data
+    * DataModel: Complete data model with Header, Claims, ServiceLines
+    * RowData (Dictionary): Row-specific context data
+    * Mappings: MappingConfiguration with lookup tables
+    * CrossWalkService: External cross-walk service reference
+  
+  This is the foundation for the entire rules engine architecture.
+  Every rule implementation must implement IRuleDefinition interface.
+
+USAGE: Referenced by all 26 other rule files in the system
+
+
+---
+
+FILE: RuleExecutionEngine.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Orchestrates execution of rules in priority order
+DESCRIPTION:
+  Implements the Chain of Responsibility pattern for rule execution:
+  
+  - Constructor:
+    * Takes IEnumerable<IRuleDefinition> rules
+    * Automatically sorts rules by Priority (ascending)
+  
+  - DetermineValue(targetField, context):
+    * Main entry point for field value determination
+    * Executes all applicable rules in priority order
+    * Returns final determined value
+  
+  - ResolveValue(targetField, context):
+    * Extended version returning RuleResolution with audit trail
+    * Tracks every rule checked and its result
+    * Useful for compliance and debugging
+  
+  - AddRule(rule):
+    * Allows dynamic rule addition at runtime
+    * Re-sorts rule list by priority
+    * Enables payer-specific rule overrides
+  
+  Process Flow:
+    1. Find all rules applicable to targetField (TargetField == field OR TargetField == "*")
+    2. Execute in priority order
+    3. First rule returning non-null value wins
+    4. If all rules return null, fallback to raw value
+    5. Log all decisions at each step
+  
+  OPEN-CLOSED PRINCIPLE: Add new rules without modifying this class
+
+DEPENDENCIES: IRuleDefinition, RuleResolution, Serilog
+
+
+---
+
+FILE: RuleRegistry.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Centralized registration and sequencing of all rules
+DESCRIPTION:
+  Single source of truth for rule ordering and configuration:
+  
+  - CreateEngine(MappingConfiguration) Method:
+    * Static factory method creating configured RuleExecutionEngine
+    * Returns fully initialized engine with all rules in proper order
+  
+  Rule Organization Levels (by priority):
+    
+    Level 1 - Priority 5 (High-Impact / Calculation Rules):
+    * ClaimFillingIndicatorRule: Maps claim types to filing indicators
+    * CarcCagcRule: CARC to GAGC code mapping (master mapping)
+    * RenderingProviderRule: Provider NPI identification
+    * MathBalancingRule: Financial amount balancing
+    
+    Level 2 - Priority 10 (Mapping Lookups):
+    * CsvLookupRule("BPR01", "TransactionHandlingCodes")
+    * CsvLookupRule("BPR04", "PaymentMethods")
+    * CsvLookupRule("CLP02", "ClaimStatusCodes")
+    * CsvLookupRule("N104_PR", "PayerIDs")
+    * Trn03Rule: Payer identifier formatting
+    
+    Level 3 - Priority 20 (Conditional Logic):
+    * ConditionalLogicRule instances for if/then logic
+    * Example: "If PaymentMethod contains 'Virtual Card' then BPR04='ACH'"
+    
+    Level 4 - Priority 30-50 (Calculated Segment Rules):
+    * TransactionHandlingRule: BPR field calculations
+    * PayerCommunicationRule: PER field determination
+    * Svc01QualifierRule: Service code qualifier
+    * Svc01ProcedureCodeRule: Procedure code cleaning
+    * RemarkCodeQualifierRule: LQ segment qualifier
+    * PayeeIdentificationRule: Provider identification
+    * PayerIdentificationRule: Payer identification
+    * PatientIdentificationRule: Patient ID determination
+    * PaymentSettingRule: Payment settings lookup
+    * ServiceDateRule: DTM segment date handling
+    * AdditionalIdentificationRule: REF segment handling
+    * AdjustmentSanitizationRule: CAS group code validation
+    * ContactInfoRule: PER contact details
+    
+    Level 5 - Priority 100 (Global Fallbacks):
+    * FallbackDefaultRule instances for standard fields:
+      - ISA01, ISA03, GS01, ST01 (envelope fields)
+      - BPR03, BPR05, BPR06, BPR12 (payment fields)
+    
+    Level 6 - Priority 150 (Catch-All Fallback):
+    * FallbackDefaultRule("*", null): Absolute fallback for any field
+  
+  IMPORTANT: Comments in code document priorities and execution order.
+  This makes the rule flow explicit and auditable.
+
+DEPENDENCIES: All 26 rule classes, MappingConfiguration, RuleExecutionEngine
+
+
+---
+
+FILE: RuleResolution.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Provides detailed audit trail for field value resolution
+DESCRIPTION:
+  Contains three classes for resolution tracking:
+  
+  - RuleResolution Class:
+    * TargetField (string): EDI field being resolved
+    * FinalValue (string): Determined final value
+    * MatchedRuleName (string): Name of winning rule (or "None (Fallback)")
+    * Trace (List<RuleTraceStep>): Complete audit trail
+    * ToString(): Returns formatted resolution report
+  
+  - RuleTraceStep Class:
+    * RuleName (string): Name of rule evaluated
+    * Priority (int): Priority of rule
+    * Status (RuleStepStatus): Skipped, NoMatch, or Matched
+    * ResultValue (string): Value returned (if matched)
+    * Message (string): Status message (e.g., "Condition not met")
+    * ToString(): Returns formatted step with status emoji
+      - ✅ Matched
+      - ⏩ Skipped
+      - ❌ NoMatch
+      - ? Unknown
+  
+  - RuleStepStatus Enum:
+    * Skipped: Rule's CanExecute returned false
+    * NoMatch: Rule executed but returned null
+    * Matched: Rule matched and returned value
+  
+  COMPLIANCE USE: Provides complete audit trail for regulatory requirements
+  DEBUGGING USE: Trace shows exact rule execution path and decisions
+
+USAGE: Returned by RuleExecutionEngine.ResolveValue() method
+
+
+================================================================================
+SECTION 2: DATA TRANSFORMATION & MAPPING RULES
+================================================================================
+
+FILE: CsvLookupRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Generic CSV table lookups for standard code mappings
+DESCRIPTION:
+  Maps EOB raw values to X12 codes using CSV mapping tables:
+  
+  Constructor Parameters:
+    - targetField (string): EDI field to target (e.g., "BPR04")
+    - mappingTableName (string): CSV filename without extension
+    - priority (int, default=10): Execution priority
+  
+  Execution Flow:
+    1. Check if RawValue is not empty
+    2. Look up RawValue in specified mapping table
+    3. Return mapped value if found
+    4. Return null if no match (pass to next rule)
+  
+  Usage Examples (from RuleRegistry):
+    - CsvLookupRule("BPR01", "TransactionHandlingCodes")
+    - CsvLookupRule("BPR04", "PaymentMethods")
+    - CsvLookupRule("CLP02", "ClaimStatusCodes")
+    - CsvLookupRule("N104_PR", "PayerIDs")
+  
+  Properties:
+    - Name: "CsvLookup({TableName})"
+    - Priority: 10 (runs after high-impact rules)
+    - TargetField: Parameterized per instance
+  
+  DESIGN PATTERN: Factory method for rule creation
+  EXTENSIBILITY: New CSV tables can be added to mappings without code changes
+
+DEPENDENCIES: IRuleDefinition, MappingConfiguration
+
+
+---
+
+FILE: CrossWalkRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Delegates complex code lookups to external cross-walk service
+DESCRIPTION:
+  Enables advanced multi-field lookups using external cross-walk library:
+  
+  Constructor Parameters:
+    - targetField (string): EDI field to target
+    - tableName (string): Master table name in cross-walk service
+    - priority (int, default=20): Execution priority
+  
+  Execution Flow:
+    1. Check if RawValue is not empty
+    2. Look up RawValue in external cross-walk service by table name
+    3. Return result if found and different from RawValue
+    4. Return null if no match or unchanged
+  
+  Used For:
+    - Complex multi-field lookups
+    - Master reference tables not in local CSVs
+    - External data source integration
+  
+  Properties:
+    - Name: "CrossWalk({targetField})"
+    - Priority: 20 (runs after CSV lookups)
+    - TargetField: Parameterized per instance
+  
+  Error Handling:
+    - If CrossWalkService is null, returns null
+    - If result equals input, returns null (no transformation)
+  
+  INTEGRATION: Requires Xalta.Edi.CodeCrossWalk library
+  USE CASE: When standard CSV mappings insufficient for complex lookups
+
+DEPENDENCIES: IRuleDefinition, Xalta.Edi.CodeCrossWalk
+
+
+---
+
+FILE: CarcCagcRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Master mapping for Claim Adjustment Reason Codes to Group Codes
+DESCRIPTION:
+  Most sophisticated mapping rule with multi-phase lookup strategy:
+  
+  Properties:
+    - Name: "CARC-to-CAGC-Mapping"
+    - Priority: 5 (high priority, before generic lookups)
+    - TargetField: "CAS01"
+  
+  Data Source Access:
+    Extracts from context:
+    - AdjustmentGroupCode, AdjustmentReasonCode from RowData
+    - PayerName, PayerId, PayerEobType from DataModel.Header
+    - RawValue: Adjustment reason code
+  
+  Multi-Phase Lookup Strategy:
+    
+    Phase 1: Payer-Specific Lookup
+      Method: context.Mappings.LookupAdjustment(payerId, eobType, groupCode, reasonCode)
+      Target: adjustment_group_mapping table
+      Priority: Highest - payer-specific rules take precedence
+      If found: Return CAGC immediately
+    
+    Phase 2: Generic Reason Code Mapping
+      Method: context.Mappings.LookupMapping("carc_cagc_mapping", reasonCode)
+      Target: carc_cagc_mapping lookup table
+      Priority: Medium - after payer-specific lookup
+      If found AND different from input: Return CAGC
+    
+    Phase 3: Master Cross-Walk Service
+      Method: context.CrossWalkService.Lookup("CARC_GAGC_GEM", reasonCode)
+      Target: CARC_GAGC_GEM master table
+      Priority: Lower - fallback to master GEM mapping
+      If found AND different from input: Return CAGC
+    
+    Phase 4: No Match Found
+      Return null (pass to next rule)
+  
+  Logging:
+    - DEBUG: Initial execution with all input values
+    - INFO: Each successful match with source indication
+    - DEBUG: No match case, passing to next rule
+  
+  IMPORTANCE: Critical for healthcare EDI compliance
+  DOMAIN KNOWLEDGE: Implements healthcare industry standard CARC-GAGC mapping rules
+
+DEPENDENCIES: IRuleDefinition, MappingConfiguration, Xalta.Edi.CodeCrossWalk, Serilog
+
+
+---
+
+FILE: ClaimFillingIndicatorRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Maps verbose claim type text to X12 claim filing indicators
+DESCRIPTION:
+  Sophisticated fuzzy matching for claim filing indicator determination:
+  
+  Properties:
+    - Name: "ClaimFillingIndicator"
+    - Priority: 8 (before generic CsvLookup at priority 10)
+    - TargetField: "CLP06"
+  
+  Configuration:
+    - TableName: "claim_filling_indicator"
+    - Loads from MappingConfiguration.RawMappingTables
+    - Required columns: "EobExtractedText", "ClaimFillingIndicator"
+  
+  Matching Strategy - Two-Phase Approach:
+    
+    Phase 1: Substring Matching
+      - Tokenize ClaimType into words
+      - For each config row keyword:
+        * Check if keyword phrase appears as substring in ClaimType
+        * Score by keyword length (longer = better match)
+        * Handles multi-word phrases (e.g., "Medicare Part A")
+      - Keep track of best match
+    
+    Phase 2: Fuzzy Word Matching
+      - For non-matched keywords from Phase 1:
+        * Tokenize keyword into words
+        * Check if ALL keyword words appear in ClaimType (order-independent)
+        * If all words found, score by keyword length
+        * Keep best matching score
+  
+  Result:
+    - Returns keyword with highest score (best match wins)
+    - Returns null if no match (fallback chain continues)
+  
+  Examples:
+    - Input: "Medicare Part A Coverage"
+    - Matches against: "Medicare Part A" → Returns associated indicator code
+    
+    - Input: "Commercial Insurance"
+    - Matches against: "Commercial", "Insurance" → Combines for best fit
+  
+  Fallback:
+    - If no match: Returns null
+    - Next rule in chain (CsvLookup at priority 10) takes over
+  
+  SPECIALIZED: Text analysis rule for user-friendly claim type parsing
+  FLEXIBLE: Handles variations in claim type wording via fuzzy matching
+
+DEPENDENCIES: IRuleDefinition, System.Collections.Generic
+
+
+---
+
+FILE: RegexTransformRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Pattern-based extraction and transformation of field values
+DESCRIPTION:
+  Applies regex pattern matching for structured data extraction:
+  
+  Constructor Parameters:
+    - name (string): Human-readable name (e.g., "Extract Procedure Code")
+    - targetField (string): EDI field being targeted
+    - pattern (string): Regex pattern to match
+    - replacement (string): Replacement template (supports $1, $2, etc.)
+    - priority (int, default=50): Execution priority
+  
+  Initialization:
+    - Compiles regex with IgnoreCase and Compiled options
+    - Pre-compiled for performance optimization
+  
+  Execution Flow:
+    1. Check if RawValue is not empty
+    2. Check if pattern matches RawValue
+    3. Replace using replacement template
+    4. Return result if not empty
+    5. Return null if result empty or no match
+  
+  Pattern Features:
+    - Capture groups: Use (pattern) to capture substrings
+    - Replacement references: $1, $2, etc. for captured groups
+    - Anchors: ^ (start), $ (end)
+    - Quantifiers: *, +, ?, {n,m}
+  
+  Use Cases:
+    - Extract procedure code from "HC:937033" → "937033"
+    - Parse formatted data from free text
+    - Standardize inconsistent formats
+    - Strip modifiers from codes
+  
+  EXTENSIBILITY: Any regex-based transformation can be added
+  FLEXIBILITY: Rule instances created with specific patterns and replacements
+
+DEPENDENCIES: IRuleDefinition, System.Text.RegularExpressions
+
+
+---
+
+FILE: RemarkCodeQualifierRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines LQ segment qualifier based on remark code type
+DESCRIPTION:
+  Qualifies remark codes for proper X12 segment generation:
+  
+  Properties:
+    - Name: "Remark-Code-Qualifier-Rule"
+    - Priority: 10 (standard lookup priority)
+    - TargetField: "LQ01"
+  
+  Execution Logic:
+    1. Extract remark code from RawValue
+    2. Check if code is NCPDP (using Mappings.IsNcpdp)
+    3. If NCPDP: Return "RX" qualifier
+    4. Otherwise: Return "HE" qualifier (standard remark codes)
+    5. If empty: Return null
+  
+  Qualifiers:
+    - RX: NCPDP Pharmacy Codes
+    - HE: Healthcare Remark Codes (standard)
+  
+  Logging:
+    - DEBUG: NCPDP detection with code value
+    - Uses Serilog for structured logging
+  
+  IMPORTANCE: Required for proper EDI segment structure
+  HEALTHCARE SPECIFIC: NCPDP vs HE distinction critical in pharmacy processing
+
+DEPENDENCIES: IRuleDefinition, Serilog
+
+
+================================================================================
+SECTION 3: SERVICE & PROCEDURE CODE RULES
+================================================================================
+
+FILE: Svc01QualifierRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Extracts product/service ID qualifier from procedure codes
+DESCRIPTION:
+  Determines SVC01-01 segment value based on code format analysis:
+  
+  Properties:
+    - Name: "SVC01-01 Regex Qualifier Rule"
+    - Priority: 10 (standard lookup priority)
+    - TargetField: "SVC01-01"
+  
+  Extraction Strategy - Four Methods:
+    
+    Method 1: Prefix Pattern Matching (Regex)
+      - Pattern: ^([a-zA-Z0-9]{2})[:>\.]
+      - Extracts 2-char prefix followed by : > or .
+      - Examples:
+        * "HC:937033" → "HC"
+        * "DA>5678" → "DA"
+        * "J.99214" → "J"
+    
+    Method 2: Separator-Based Extraction
+      - If contains : or >, split on that character
+      - Take first non-empty part before separator
+      - Examples:
+        * "CPT:99214" → "CPT"
+        * "HCPCS>J1100" → "HCPCS"
+    
+    Method 3: Dynamic Pattern Loading
+      - Load "svc_qualifier_patterns" from MappingConfiguration
+      - For each pattern record:
+        * Check if code matches regex pattern
+        * Return associated qualifier
+        * Skip invalid regex patterns gracefully
+      - Enables customization without code changes
+    
+    Method 4: Default Fallback
+      - If no pattern matches, return "HC" (HCPCS)
+      - "HC" is most common qualifier
+  
+  Supported Code Types:
+    - CPT (Current Procedural Terminology)
+    - HCPCS (Healthcare Common Procedure Coding System)
+    - NDC (National Drug Code)
+    - Revenue Codes
+    - Dental Codes
+    - And others (via dynamic patterns)
+  
+  FLEXIBILITY: Dynamic patterns from config enable customization
+  ROBUSTNESS: Multiple fallback strategies ensure qualification
+
+DEPENDENCIES: IRuleDefinition, System.Text.RegularExpressions
+
+
+---
+
+FILE: Svc01ProcedureCodeRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Sanitizes procedure codes by removing prefixes and suffixes
+DESCRIPTION:
+  Cleans procedure codes to X12-compliant format:
+  
+  Properties:
+    - Name: "SVC01-02 Procedure Code Sanitizer"
+    - Priority: 10 (standard lookup priority)
+    - TargetField: "SVC01-02"
+  
+  Sanitization Process - Three Steps:
+    
+    Step 1: Remove Prefix Qualifiers
+      - Pattern: ^(?:[a-zA-Z0-9]{2}[:>\.]\s*)+(.*)$
+      - Removes 2-char qualifier followed by : > or .
+      - Examples:
+        * "HC:937033" → "937033"
+        * "DA>5678" → "5678"
+        * "J.99214" → "99214"
+      - Trims whitespace from result
+    
+    Step 2: Remove Suffix Modifiers (with separators)
+      - If contains : > or .
+      - Split on these separators
+      - Keep first part (base code)
+      - Examples:
+        * "99214:25" → "99214"
+        * "J1100>LR" → "J1100"
+        * "937033.25" → "937033"
+    
+    Step 3: Handle Concatenated Modifiers
+      - If no separators found AND code length is 7 or 9 chars
+      - Extract first 5 characters as base code
+      - Removes seamlessly concatenated modifiers
+      - Examples:
+        * "9921425" (7 chars) → "99214" (CPT + 2-digit modifier)
+        * "J110025LR" (9 chars) → "J1100" (NDC + modifiers)
+  
+  Return Value:
+    - If all steps fail: Return original code
+    - Ensures non-null return for valid codes
+    - Returns empty string for empty input
+  
+  CRITICAL: Ensures X12 format compliance
+  ORDER IMPORTANT: Steps executed in specific order to handle all cases
+
+DEPENDENCIES: IRuleDefinition, System, System.Text.RegularExpressions
+
+
+================================================================================
+SECTION 4: IDENTIFICATION RULES
+================================================================================
+
+FILE: PayerIdentificationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines payer identification in X12 segment (N103/N104)
+DESCRIPTION:
+  Populates Loop 1000A payer identification fields:
+  
+  Properties:
+    - Name: "Payer Identification Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - N103_Payer: Qualifier field
+    - N104_Payer: ID field
+  
+  Execution Logic:
+    
+    For N103_Payer (Qualifier):
+      1. Extract PayerId from RawValue or DataModel.Header
+      2. If PayerId not empty: Return "XV"
+      3. Otherwise: Return null (fallback to next rule)
+    
+    For N104_Payer (ID):
+      1. Extract PayerId from RawValue or DataModel.Header
+      2. If PayerId not empty: Return PayerId
+      3. Otherwise: Return null (fallback to next rule)
+  
+  Qualifier Meaning:
+    - "XV": X12 Identification Code (Federal Employer ID - EIN)
+    - Standard for healthcare payer identification in X12 835
+  
+  Data Source Priority:
+    1. RawValue (passed from generator)
+    2. DataModel.Header.PayerId (data model fallback)
+  
+  NULL HANDLING: Gracefully handles null header or properties
+  
+  USAGE: Identifies the insurance company/payer in the EDI message
+  IMPORTANCE: Required for payer routing and claim matching
+
+DEPENDENCIES: IRuleDefinition
+
+
+---
+
+FILE: PayeeIdentificationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines payee/provider identification (N103/N104) in Loop 1000B
+DESCRIPTION:
+  Populates Loop 1000B payee (provider) identification fields:
+  
+  Properties:
+    - Name: "Payee Identification Rule (NPI vs TaxID Fallback)"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - N102_Payee: Name passthrough
+    - N103_Payee: Qualifier field
+    - N104_Payee: ID field
+  
+  Execution Logic:
+    
+    For N102_Payee (Name):
+      - Passthrough RawValue as-is (allows future mapping/cleaning)
+      - Return non-null string always
+    
+    For N103_Payee (Qualifier) - NPI Priority Logic:
+      1. Check if ProviderNpi exists and >= 2 characters
+      2. If yes: Return "XX" (NPI Indicator)
+      3. Check if ProviderTaxId exists
+      4. If yes: Return "FI" (Federal Employer ID)
+      5. Otherwise: Return empty string
+    
+    For N104_Payee (ID):
+      1. Check if ProviderNpi exists and >= 2 characters
+      2. If yes: Return trimmed ProviderNpi
+      3. Check if ProviderTaxId exists
+      4. If yes: Return trimmed ProviderTaxId
+      5. Otherwise: Return empty string
+  
+  Qualifiers Used:
+    - "XX": NPI (National Provider Identifier)
+    - "FI": Federal Employer ID (Tax ID)
+  
+  Priority Logic:
+    - NPI preferred over Tax ID when both available
+    - Reflects modern healthcare preference for NPI
+  
+  ERROR HANDLING:
+    - Null header handled gracefully
+    - Null properties checked before access
+    - Always returns non-null string (empty if needed)
+  
+  IMPORTANCE: Identifies provider/payee receiving payment
+  MODERN STANDARD: NPI-first approach reflects current healthcare practices
+
+DEPENDENCIES: IRuleDefinition
+
+
+---
+
+FILE: PatientIdentificationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines patient identification (NM108/NM109) in Loop 2100
+DESCRIPTION:
+  Populates Loop 2100 patient identification fields:
+  
+  Properties:
+    - Name: "Patient Identification Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - NM108_Patient: Qualifier field
+    - NM109_Patient: ID field
+  
+  Data Source:
+    - PatientId: From RowData (claim-level context)
+    - SubscriberId: From RowData (claim-level context)
+    - Minimum 2 characters required for valid ID
+  
+  Execution Logic:
+    
+    For NM108_Patient (Qualifier):
+      1. Check if PatientId exists AND >= 2 characters
+      2. OR check if SubscriberId exists AND >= 2 characters
+      3. If either true: Return "MI" (Member Identification)
+      4. Otherwise: Return null
+    
+    For NM109_Patient (ID):
+      1. If PatientId exists AND >= 2 characters: Return PatientId
+      2. Else if SubscriberId exists AND >= 2 characters: Return SubscriberId
+      3. Otherwise: Return null
+  
+  ID Priority:
+    - PatientId preferred over SubscriberId
+    - Falls back to SubscriberId if PatientId not available
+  
+  Qualifier Meaning:
+    - "MI": Member ID / Patient Member ID (standard healthcare)
+  
+  Context Requirement:
+    - Requires Edi835Generator to populate RowData with claim fields
+    - Context passed per claim in generation loop
+  
+  IMPORTANCE: Links payment to specific patient/member
+  CLAIM-LEVEL: Patient ID varies per claim in EDI message
+
+DEPENDENCIES: IRuleDefinition
+
+
+---
+
+FILE: RenderingProviderRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines rendering provider NPI identification (NM108/NM109)
+DESCRIPTION:
+  Populates Loop 2100 rendering provider identification fields:
+  
+  Properties:
+    - Name: "Rendering Provider Identification Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - NM108_Rendering: Qualifier field
+    - NM109_Rendering: ID field
+  
+  Data Source:
+    - ProviderRenderingNpi: From RowData
+    - Minimum 2 characters required for valid NPI
+  
+  Execution Logic:
+    
+    For NM108_Rendering (Qualifier):
+      1. Get ProviderRenderingNpi from RowData
+      2. Check if NPI exists AND >= 2 characters
+      3. If yes: Return "XX" (NPI Indicator)
+      4. Otherwise: Return null
+    
+    For NM109_Rendering (ID):
+      1. Get ProviderRenderingNpi from RowData
+      2. Check if NPI exists AND >= 2 characters
+      3. If yes: Return NPI
+      4. Otherwise: Return null
+  
+  Qualifier Meaning:
+    - "XX": NPI (National Provider Identifier)
+  
+  Context:
+    - Identifies the actual provider who rendered the service
+    - Different from billing provider (N103/N104)
+    - Service-line level information
+  
+  SERVICE-LINE LEVEL: Rendering provider varies per service line
+  OPTIONAL: Returns null if no rendering NPI available
+
+DEPENDENCIES: IRuleDefinition
+
+
+---
+
+FILE: AdditionalIdentificationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Handles additional identification in REF segments (Loop 1000B)
+DESCRIPTION:
+  Populates Loop 1000B payee REF segment identification fields:
+  
+  Properties:
+    - Name: "Additional Identification Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - REF01_Payee: Qualifier field
+    - REF02_Payee: Identifier field
+  
+  Data Source:
+    - ProviderTaxId: From DataModel.Header
+    - Required for payee identification
+  
+  Execution Logic:
+    
+    For REF01_Payee (Qualifier):
+      1. Check if ProviderTaxId exists AND not empty
+      2. If yes: Return "TJ" (Tax ID Qualifier)
+      3. Otherwise: Return null
+    
+    For REF02_Payee (Identifier):
+      1. Return ProviderTaxId value
+      2. Returns the actual Tax ID number
+  
+  Qualifier Meaning:
+    - "TJ": Tax ID (EIN - Employer Identification Number)
+  
+  Segment Purpose:
+    - Provides additional identification for payee
+    - Tax ID different from primary NPI/FI identification
+    - Required for certain EDI implementations
+  
+  EXTENSIBILITY: Can be extended for other REF segment types
+  PAYEE-SPECIFIC: Only applies to payee (provider) identification
+
+DEPENDENCIES: IRuleDefinition
+
+
+================================================================================
+SECTION 5: COMMUNICATION & CONTACT RULES
+================================================================================
+
+FILE: PayerCommunicationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines payer communication type and details (PER03/PER04)
+DESCRIPTION:
+  Populates Loop 1000A payer communication segment (PER):
+  
+  Properties:
+    - Name: "Payer Communication Rule"
+    - Priority: 10 (standard lookup priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - PER03_PR: Communication type qualifier
+    - PER04_PR: Communication value/number
+  
+  Data Source:
+    - PayerCommunicationNumber: From RowData
+    - Required for rule execution (checked via CanExecute)
+  
+  Execution Logic for PER03_PR (Type Qualifier):
+    
+    Step 1: Check for Email Format
+      - Condition: commValue.Contains("@")
+      - Result: Return "EM"
+    
+    Step 2: Check for URL Format
+      - Condition: Contains "http://" OR "www"
+      - Result: Return "UR" (URI)
+    
+    Step 3: Check for Phone Format
+      - Condition: Contains any digit (0-9)
+      - Result: Return "TE" (Telephone)
+    
+    Step 4: Default Fallback
+      - If none match: Return "TE" (assume telephone)
+  
+  Execution Logic for PER04_PR (Value):
+    - Return commValue unchanged
+    - Contains actual communication number/email/URL
+  
+  Qualifiers Used:
+    - EM: Email Address
+    - UR: Uniform Resource Locator (URL/Web Address)
+    - TE: Telephone Number
+  
+  Examples:
+    - "support@payer.com" → PER03="EM", PER04="support@payer.com"
+    - "https://www.payer.com" → PER03="UR", PER04="https://www.payer.com"
+    - "1-800-555-1234" → PER03="TE", PER04="1-800-555-1234"
+  
+  INTELLIGENT DETECTION: Automatically identifies communication type
+  FLEXIBLE: Handles multiple communication formats
+
+DEPENDENCIES: IRuleDefinition, System
+
+
+---
+
+FILE: ContactInfoRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines contact information for various contact types (PER)
+DESCRIPTION:
+  Populates PER segment contact information fields:
+  
+  Properties:
+    - Name: "Contact Info Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "*" (applies via CanExecute)
+  
+  Applicable Fields (via CanExecute):
+    - PER02_*: Contact name fields
+    - PER04_*: Contact communication number fields
+  
+  Contact Types Handled:
+    1. Payer Technical Contact
+    2. Payer Business Contact
+    3. Claim Contact
+  
+  Execution Logic:
+    
+    For PER02_PayerTechnicalContact:
+      1. If RawValue is not empty: Return RawValue
+      2. Otherwise: Return "TECH SUPPORT" (default)
+    
+    For PER02_PayerBusinessContact:
+      1. If RawValue is not empty: Return RawValue
+      2. Otherwise: Return empty string
+    
+    For PER04 Fields (Communication Numbers):
+      - Applies to: PayerTechnicalContact, PayerBusinessContact, ClaimContact
+      
+      Execution:
+      1. If RawValue is not empty: Return RawValue
+      2. Otherwise: Lookup "GlobalSupportNumber" from settings
+      3. If found: Return GlobalSupportNumber
+      4. Otherwise: Return empty string
+  
+  Default Behaviors:
+    - Technical Contact: Defaults to "TECH SUPPORT" if missing
+    - Business Contact: Empty if missing
+    - Communication Number: Uses GlobalSupportNumber from config
+  
+  CONTACT LEVEL: Information for contacting payer representatives
+  FALLBACK STRATEGY: Smart defaults for missing contact information
+
+DEPENDENCIES: IRuleDefinition
+
+
+================================================================================
+SECTION 6: DATE & PAYMENT RULES
+================================================================================
+
+FILE: ServiceDateRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Determines service date qualifier for DTM segments
+DESCRIPTION:
+  Populates Loop 2110 DTM (Date/Time) segment qualifier field:
+  
+  Properties:
+    - Name: "Service Date Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "DTM01_ServiceDate"
+  
+  Data Source (from RowData):
+    - LineServiceDateFrom: Service start date
+    - LineServiceDateTo: Service end date
+  
+  Execution Logic:
+    
+    Check if FromDate exists:
+      - If empty: Return null
+    
+    Compare dates:
+      - If FromDate == ToDate (same day service)
+        * Result: Return "472"
+        * Meaning: Qualified service date (single day)
+      
+      - If FromDate != ToDate (range)
+        * OR if ToDate is empty (open-ended)
+        * Result: Return "150"
+        * Meaning: Service period start date
+    
+    Date Qualifiers:
+      - "472": Single service date (point in time)
+      - "150": Service period start (beginning of range)
+  
+  Generator Responsibility:
+    - Rule returns qualifier only
+    - Generator handles actual date range logic
+    - Generator may create multiple DTM segments for ranges
+  
+  SIMPLIFIED: Rule determines qualifier, generator handles complexity
+  SERVICE-LINE LEVEL: Varies per service line in claim
+
+DEPENDENCIES: IRuleDefinition
+
+
+---
+
+FILE: TransactionHandlingRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Calculates transaction handling and payment fields
+DESCRIPTION:
+  Determines BPR segment values (BPR01, BPR03, BPR04):
+  
+  Properties:
+    - Name: "BPR01-Calculation"
+    - Priority: 50 (calculated segment priority)
+    - TargetField: "BPR01", "BPR03", "BPR04"
+  
+  Data Source:
+    - DataModel.Header: Payer and payment information
+    - DataModel.Claims: Claim collection
+    - ProviderAdjustments: Any provider-level adjustments
+  
+  BPR01 - Transaction Handling Code:
+    
+    Purpose: Indicates what the transmission contains
+    
+    Logic:
+      1. Check if claims exist (hasEra = Data.Claims.Any())
+      2. Check if payment > 0 (hasPayment)
+      
+      Determinations:
+      - If NO payment (hasPayment = false)
+        * Return "H" = Notification Only (RA without payment)
+      
+      - If payment exists AND claims exist
+        * Return "C" = Payment accompanies Remittance Advice
+      
+      - If payment exists but NO claims
+        * Return "D" = Payment Only (no RA)
+    
+    Values:
+      - "H": Notification Only (Health/Status only, no payment)
+      - "C": Combined (Payment + RA)
+      - "D": Payment only (no RA details)
+  
+  BPR03 - Credit/Debit Indicator:
+    
+    Purpose: Indicates payment direction
+    
+    Logic:
+      1. If TotalPaymentAmount == 0
+        * Return "C" = Credit (payment or refund)
+      
+      2. Calculate net: net = TotalPaymentAmount - Sum(ProviderAdjustments.PlbAmount)
+      
+      3. If net < 0
+        * Return "D" = Debit (payment being withdrawn/reversed)
+      
+      4. Otherwise
+        * Return "C" = Credit (normal payment)
+    
+    Values:
+      - "C": Credit (money flowing to provider)
+      - "D": Debit (money flowing back from provider)
+  
+  BPR04 - Payment Method:
+    
+    Purpose: Specifies how payment is being made
+    
+    Logic:
+      1. If TotalPaymentAmount == 0
+        * Return "NON" = No remittance is needed
+      
+      2. If RoutingNumber AND BankAccountNumber both provided
+        * Return "ACH" = Electronic Funds Transfer
+      
+      3. If CheckOrEftNumber provided
+        * Return "CHK" = Check payment
+      
+      4. Otherwise
+        * Return null (pass to next rule for config lookup)
+    
+    Values:
+      - "NON": Non-remittance (no payment)
+      - "ACH": Automated Clearing House (direct bank transfer)
+      - "CHK": Check payment
+  
+  CRITICAL: Determines structure of entire 835 transmission
+  CALCULATED: Derives values from data model calculations
+
+DEPENDENCIES: IRuleDefinition, System.Linq
+
+
+---
+
+FILE: PaymentSettingRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Lookup payment settings from configuration
+DESCRIPTION:
+  Global rule for hierarchical payment settings lookup:
+  
+  Properties:
+    - Name: "Payment Setting Rule"
+    - Priority: 80 (runs before final FallbackDefault but after specific rules)
+    - TargetField: "*" (applies to all fields)
+  
+  Configuration Source:
+    - default_payment_settings sheet in MappingConfiguration
+    - Contains hierarchical default values
+  
+  Execution Logic:
+    
+    Always Executes:
+      - CanExecute always returns true
+      - Acts as late-stage fallback
+    
+    Lookup Process:
+      1. Call context.Mappings.GetPaymentSetting(targetField)
+      2. Returns value from payment settings table if found
+      3. If found and not empty: Return value
+      4. Otherwise: Return null (pass to next rule)
+    
+    Hierarchical Lookup:
+      - First looks for matched payer row in settings
+      - Falls back to global default row if not found
+      - Enables payer-specific and global overrides
+  
+  Applicable Fields:
+    - BPR fields (payment related)
+    - Any field with default payment settings configured
+  
+  USE CASE: Provides payment defaults before absolute fallback
+  CONFIGURATION DRIVEN: Enables runtime customization without code changes
+
+DEPENDENCIES: IRuleDefinition
+
+
+================================================================================
+SECTION 7: DATA VALIDATION & BALANCING RULES
+================================================================================
+
+FILE: AdjustmentSanitizationRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Validates and sanitizes adjustment group codes
+DESCRIPTION:
+  Ensures CAS01 contains valid X12 adjustment group codes:
+  
+  Properties:
+    - Name: "Adjustment Sanitization Rule"
+    - Priority: 5 (high priority)
+    - TargetField: "CAS01"
+  
+  Valid Group Codes (X12 Standard):
+    - CO: Contractual Obligation
+    - CR: Correction
+    - OA: Other Adjustments
+    - PI: Payor Initiated
+    - PR: Patient Responsibility
+  
+  Sanitization Logic:
+    
+    Input Validation:
+      1. Get group code from RawValue
+      2. Check if empty OR not in ValidGroups set
+      
+      If invalid/empty:
+        - Check if RawValue has content
+        - If yes: Return "PR" (assume patient responsibility)
+        - If no value: Return "OA" (other adjustments fallback)
+      
+      If valid:
+        - Return group code unchanged
+  
+  Processing:
+    1. Group codes checked against HashSet<ValidGroups>
+    2. Case-sensitive matching (uppercase expected)
+    3. Simple heuristic: non-empty invalid values → "PR"
+    4. Empty values → "OA"
+  
+  Fallback Strategy:
+    - "PR": Patient Responsibility (common default)
+    - "OA": Other Adjustments (catch-all fallback)
+  
+  COMPLIANCE: Ensures EDI message contains only valid codes
+  DEFENSIVE: Handles malformed/unknown codes gracefully
+
+DEPENDENCIES: IRuleDefinition, System.Collections.Generic
+
+
+---
+
+FILE: MathBalancingRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Complex financial balancing and reconciliation logic
+DESCRIPTION:
+  Most complex rule ensuring financial accuracy in 835 messages:
+  
+  Properties:
+    - Name: "Math Balancing Rule"
+    - Priority: 10 (after high-impact rules)
+    - TargetField: "SERVICE_LINE_ADJUSTMENTS"
+  
+  Injected Dependencies:
+    - IBalancingFixer: Performs actual balancing operations
+    - Default: BalancingFixer() instance
+  
+  Core Concept:
+    - Entire rule processes claims at claim/service-line level
+    - Not a simple field value rule but claim-level processor
+    - Triggers on SERVICE_LINE_ADJUSTMENTS target (pseudo-field)
+  
+  Financial Balancing Formulas:
+    
+    Patient Responsibility (PR):
+      PR_Total = Allowed Amount - Paid Amount
+      Used to determine patient copay/deductible/coinsurance
+    
+    Contractual Obligation (CO):
+      CO_Total = Charge Amount - Allowed Amount
+      Write-off amount per healthcare contracts
+    
+    Balance Check:
+      Gap = Charge - Paid - Sum(Adjustments) MUST EQUAL 0
+      Ensures all amounts reconcile perfectly
+  
+  Patient Responsibility (PR) Logic - Four Rules:
+    
+    Rule 1: Trust Excel Breakdown (Highest Priority)
+      - If Excel contains copay/deductible/coinsurance values
+      - ALWAYS use Excel values for PR-3/PR-1/PR-2
+      - Most reliable source of patient responsibility
+    
+    Rule 2: Calculate from Amounts
+      - If no Excel breakdown:
+        * Calculate PR = Allowed - Paid
+        * Check if PR matches CLP05 perfectly → Use PR-3
+        * Check PR ± Sequestration matches CLP05 → Use PR-3
+        * If no exact match → Fallback to PR-3
+    
+    Rule 3: Qualify PR Results
+      - PR-3: Standard patient responsibility (copay/coinsurance)
+      - PR-1: Deductible
+      - PR-2: Coinsurance
+    
+    Rule 4: Fallback Strategy
+      - If all else fails, return PR-3 with calculated amount
+  
+  Contractual Obligation (CO) Logic:
+    
+    Phase 1: Preserve Excel CO/OA Values
+      - Non-special CO and OA adjustments from Excel preserved
+    
+    Phase 2: Handle Sequestration
+      - Excel sequestration column → CO-253
+      - Other insurance column → OA-23
+    
+    Phase 3: Balance Check
+      - If Gap == 0 → Balanced, done
+      - If Gap > 0 → Check for sequestration first, remainder to CO-45
+      - If Gap < 0 → Reduce or remove CO-45
+    
+    Phase 4: Sequestration Detection (Gap > 0 only)
+      
+      Medicare Rules:
+        - ALWAYS: CO-253 = exactly 2% of Allowed Amount
+        - Non-negotiable, regulatory requirement
+      
+      Non-Medicare Rules:
+        - If GAP ≈ 2% of Allowed (within $0.01)
+          * Set CO-253 = GAP
+          * Assume sequestration
+        - If GAP not near 2%
+          * Skip CO-253
+          * Use CO-45 only
+      
+      Guard Condition:
+        - If CO-253 already placed in Phase 3B
+        - Skip detection entirely (prevent duplication)
+  
+  Sequestration (CO-253) Significance:
+    - Medicare uses for regulatory compliance
+    - Hospital tax/sequestration holdback
+    - Cannot be sent to patient (provider responsibility)
+    - Must be precisely calculated per regulations
+  
+  CO-45 (Gap Fill) Purpose:
+    - Catch-all adjustment code
+    - Fills unaccounted financial gaps
+    - Last resort if no specific reason code applies
+  
+  Method: PreProcessClaimSequestration(ClaimData claim)
+    - Identifies identical sequestration across service lines
+    - Processes sequestration data before main balancing
+    - Ensures consistent sequestration handling
+  
+  Logging (Serilog):
+    - All calculations logged for audit trail
+    - DEBUG level: Processing details
+    - INFO level: Final balancing results
+  
+  CRITICAL: Financial compliance requirement
+  COMPLEX: Handles healthcare-specific adjustments and regulations
+  ESSENTIAL: Ensures EDI 835 accuracy
+
+DEPENDENCIES: IRuleDefinition, Xalta.Edi.BalancingValidation, Serilog
+
+
+================================================================================
+SECTION 8: CONDITIONAL & FALLBACK RULES
+================================================================================
+
+FILE: ConditionalLogicRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Conditional if/then logic for field determination
+DESCRIPTION:
+  Flexible rule for applying conditions to field values:
+  
+  Constructor Parameters:
+    - name (string): Human-readable name
+    - targetField (string): EDI field being targeted
+    - condition (Func<context, bool>): Predicate determining if rule applies
+    - valueProducer (Func<context, string>): Function producing value if condition true
+    - priority (int, default=30): Execution priority
+  
+  Properties:
+    - Name: Custom name provided in constructor
+    - Priority: Custom priority provided in constructor
+    - TargetField: Target field provided in constructor
+  
+  Execution Model:
+    - CanExecute: Evaluates condition predicate
+    - Execute: Runs valueProducer if condition met
+    - Returns null if condition false (CanExecute prevents Execute call)
+  
+  Factory Methods for Common Patterns:
+    
+    1. WhenFieldContains(targetField, checkField, containsText, resultValue, priority)
+       - Checks if RowData[checkField] contains substring
+       - Case-insensitive comparison
+       - If true: Returns resultValue
+       - Example: WhenFieldContains("BPR04", "PaymentMethod", "Virtual Card", "NON", 20)
+    
+    2. WhenFieldEquals(targetField, checkField, equalsText, resultValue, priority)
+       - Checks if RowData[checkField] equals text exactly
+       - Case-insensitive comparison
+       - If true: Returns resultValue
+       - Example: WhenFieldEquals("ISA01", "SecurityQualifier", "00", "00", 20)
+    
+    3. WhenEmpty(targetField, fallbackValue, priority)
+       - Checks if raw value is empty/null
+       - If empty: Returns fallbackValue
+       - Useful for providing defaults
+  
+  Usage in RuleRegistry:
+    ConditionalLogicRule.WhenFieldContains(
+      "BPR04",
+      "PaymentMethod",
+      "Virtual Card",
+      mappings.GetDefault("BPR04_VirtualCardFallback", "ACH"),
+      20)
+  
+  FLEXIBILITY: Factory methods simplify common conditional patterns
+  EXTENSIBILITY: Constructor allows any custom condition/producer logic
+
+DEPENDENCIES: IRuleDefinition, System
+
+
+---
+
+FILE: FallbackDefaultRule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Provides default values when no other rule matches
+DESCRIPTION:
+  Last-resort rule ensuring every field gets a value:
+  
+  Constructor Parameters:
+    - targetField (string): EDI field being targeted
+    - hardcodedDefault (string, optional): Default value to always return
+    - priority (int, default=100): Should be high number (runs last)
+  
+  Properties:
+    - Name: "FallbackDefault({targetField})"
+    - Priority: Usually 100 or 150 (runs last)
+    - TargetField: Target field provided in constructor
+  
+  Execution Logic:
+    
+    CanExecute:
+      - Always returns true
+      - Ensures rule always attempts to execute
+      - Typical fallback rule behavior
+    
+    Execute:
+      
+      If hardcodedDefault is provided (not null):
+        - Return hardcodedDefault directly
+        - Example: FallbackDefaultRule("ST01", "835")
+        - Always returns "835" if no other rule matched
+      
+      If hardcodedDefault is null:
+        - Lookup TargetField in code_defaults.csv
+        - Example: FallbackDefaultRule("ISA01", null)
+        - Looks up "ISA01" in config defaults table
+        - If found and not empty: Return default value
+        - Otherwise: Return null
+  
+  Usage in RuleRegistry:
+    - Hardcoded Examples:
+      * FallbackDefaultRule("ISA01", "00", 100)
+      * FallbackDefaultRule("ISA03", "00", 100)
+      * FallbackDefaultRule("GS01", "HP", 100)
+      * FallbackDefaultRule("ST01", "835", 100)
+      * FallbackDefaultRule("BPR03", "C", 100)
+      * FallbackDefaultRule("BPR05", "CCP", 100)
+      * FallbackDefaultRule("BPR06", "01", 100)
+      * FallbackDefaultRule("BPR12", "01", 100)
+    
+    - Config Lookup Example:
+      * FallbackDefaultRule("*", null, 150) = Catch-all fallback
+      * Looks up "*" (wildcard) in defaults table
+      * Ultimate fallback for any unmatched field
+  
+  Priority Levels:
+    - Priority 100: Specific field defaults
+    - Priority 150: Absolute catch-all fallback
+  
+  PLACEMENT: Should always be last rule (highest priority number)
+  SAFETY NET: Ensures no EDI field is left without value
+
+DEPENDENCIES: IRuleDefinition
+
+
+================================================================================
+SECTION 9: SPECIALIZED RULES
+================================================================================
+
+FILE: Trn03Rule.cs
+LOCATION: Generator835/Rules/
+PURPOSE: Formats payer identifier for TRN03 segment
+DESCRIPTION:
+  Specialized formatting rule for transaction reference tracking:
+  
+  Properties:
+    - Name: "TRN03 Payer Identifier Rule"
+    - Priority: 10 (standard lookup priority)
+    - TargetField: "TRN03"
+  
+  X12 Requirement:
+    - Format: "1" + 9-digit payer EIN/TIN
+    - Total Length: Exactly 10 characters
+    - Type: Alphanumeric
+    - Purpose: Uniquely identifies payer in transaction
+  
+  Data Source Priority:
+    
+    Priority 1: Matched Payer Registry
+      - Call context.Mappings.MatchedPayer
+      - If exists: GetPayerTin(MatchedPayer)
+      - Most specific, payer-matched TIN
+    
+    Priority 2: RawValue (Generator-provided)
+      - RawValue passed from Edi835Generator
+      - Usually 'tin' parameter from generator
+      - Default source for most cases
+    
+    Priority 3: RowData Dictionary
+      - Check RowData["PayerID"]
+      - Fallback if RawValue not provided
+    
+    Priority 4: Hardcoded Default
+      - Return "1999999999"
+      - Used only if all else fails
+      - 1 + nine 9's = placeholder
+  
+  Formatting Logic:
+    
+    If already 10 chars AND starts with "1":
+      - Assume already formatted
+      - Return as-is
+      - Example: "1234567890" → "1234567890"
+    
+    If not properly formatted:
+      - Strip all non-numeric characters
+      - Extract digits only
+      - If > 9 digits: Take first 9
+      - Pad with zeros to 9 digits if needed
+      - Prepend "1"
+      - Result: "1" + 9-digit EIN
+    
+    Examples:
+      - "234567890" → "1234567890"
+      - "23-4567890" → "1234567890"
+      - "2345678" → "1234567890" (padded)
+      - null/empty → "1999999999" (fallback)
+  
+  Logging:
+    - DEBUG: When using RawValue from generator
+    - Uses Serilog structured logging
+  
+  EDI COMPLIANCE: Ensures TRN03 format per X12 standards
+  TRANSACTION TRACKING: Critical for claim matching and audit
+
+DEPENDENCIES: IRuleDefinition, System.Linq, Serilog
+
+
+================================================================================
+SECTION 10: SYSTEM ARCHITECTURE OVERVIEW
+================================================================================
+
+DESIGN PATTERN: Chain of Responsibility
+  - Rules form a chain where first match wins
+  - Each rule can pass to next rule by returning null
+  - Order matters: defined by Priority value
+  
+PRINCIPLES:
+  - Open-Closed: Add rules without modifying engine
+  - Single Responsibility: Each rule handles one concern
+  - Dependency Injection: Context passed to all rules
+  - Configurability: Many rules data-driven from CSV tables
+
+EXECUTION FLOW:
+  1. Generate field value needed
+  2. Create RuleExecutionContext with all data
+  3. Call RuleExecutionEngine.DetermineValue(field, context)
+  4. Engine finds applicable rules for field
+  5. Execute rules in priority order
+  6. First non-null return is final value
+  7. If all null, use raw value as fallback
+  8. Return RuleResolution with full audit trail
+
+PRIORITY ORGANIZATION:
+  Priority 5: High-impact domain rules (CARC/CAGC, balancing, etc.)
+  Priority 8: Specialized pattern matching (claim filling indicators)
+  Priority 10: Standard CSV and Trn03 lookups
+  Priority 20: Cross-walk and conditional logic
+  Priority 30-50: Calculated segment values
+  Priority 80: Payment settings (late lookup)
+  Priority 100: Field-specific defaults
+  Priority 150: Absolute catch-all default
+
+KEY RULES BY CATEGORY:
+
+  Financial:
+    - MathBalancingRule: Ensures charge/paid/adjustment balancing
+    - TransactionHandlingRule: BPR calculations
+    - PaymentSettingRule: Payment defaults
+
+  Code Mappings:
+    - CarcCagcRule: Healthcare-specific CARC→GAGC mapping
+    - ClaimFillingIndicatorRule: Claim type→indicator mapping
+    - CsvLookupRule: Generic CSV table lookups
+    - Svc01QualifierRule: Procedure code qualifier detection
+
+  Identification:
+    - PayerIdentificationRule: Payer (N103/N104)
+    - PayeeIdentificationRule: Provider (N103/N104, NPI priority)
+    - PatientIdentificationRule: Patient/member (NM108/NM109)
+    - RenderingProviderRule: Service provider (NM108/NM109)
+    - Trn03Rule: Transaction payer ID
+
+  Communication:
+    - PayerCommunicationRule: Auto-detect email/URL/phone
+    - ContactInfoRule: Contact name and number defaults
+
+  Validation:
+    - AdjustmentSanitizationRule: Valid CAS01 codes only
+    - RemarkCodeQualifierRule: NCPDP vs standard codes
+
+  Structural:
+    - ServiceDateRule: Single date vs date range
+    - RegexTransformRule: Pattern-based extraction
+    - ConditionalLogicRule: If/then logic
+    - FallbackDefaultRule: Last-resort defaults
+    - CrossWalkRule: External service lookups
+
+DATA DEPENDENCIES:
+  All rules depend on rich RuleExecutionContext containing:
+  - TargetField: What field to determine
+  - RawValue: Starting value from EOB
+  - DataModel: Full claim/header/service-line data
+  - RowData: Row-level context
+  - Mappings: Configuration and lookup tables
+  - CrossWalkService: External code services
+
+EXTENSIBILITY:
+  To add new rule:
+  1. Implement IRuleDefinition interface
+  2. Set Name, Priority, TargetField
+  3. Implement CanExecute(context) predicate
+  4. Implement Execute(context) logic
+  5. Register in RuleRegistry.CreateEngine()
+  6. Set appropriate priority based on rule type
+  
+  No changes needed to RuleExecutionEngine!
+
+LOGGING & AUDITING:
+  - All decisions logged via Serilog
+  - RuleResolution provides complete audit trail
+  - Can replay rule decisions for compliance review
+  - Essential for healthcare audit requirements
+
+TESTING STRATEGY:
+  - Each rule can be tested independently
+  - Mock RuleExecutionContext for testing
+  - No need to test engine for rule changes
+  - Configuration-driven rules testable via CSV mock data
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+Total Files Analyzed: 27
+File Categories:
+  - Core Infrastructure: 4 files (IRuleDefinition, Engine, Registry, Resolution)
+  - Data Transformation: 6 files (CSV, CrossWalk, CARC/CAGC, ClaimFilling, Regex, RemarkCode)
+  - Service/Procedure: 2 files (Qualifier, Code Sanitizer)
+  - Identification: 5 files (Payer, Payee, Patient, Rendering, Additional)
+  - Communication: 2 files (Payer Communication, Contact Info)
+  - Date/Payment: 4 files (Service Date, Transaction Handling, Payment Setting, Trn03)
+  - Validation: 2 files (Adjustment Sanitization, Math Balancing)
+  - Conditional: 2 files (Conditional Logic, Fallback Default)
+
+Total Rules Used in Registry: 26 concrete rules
+Execution Priorities: 5, 8, 10, 20, 30-50, 80, 100, 150
+
+Lines of Code (approximate):
+  - Core Infrastructure: ~200 lines
+  - Business Rules: ~2000+ lines
+  - Average Rule: 50-150 lines (except MathBalancingRule: 300+)
+
+Dependencies:
+  - External: Xalta.Edi.CodeCrossWalk, Xalta.Edi.BalancingValidation, Serilog
+  - Internal: MappingConfiguration, RuleExecutionContext models
+
+Healthcare Domain Areas Covered:
+  - EDI 835 (Explanation of Benefits)
+  - Healthcare code sets (CARC, CAGC, CPT, HCPCS, NDC)
+  - Financial balancing (charges, payments, adjustments)
+  - Payer integration and communication
+  - Patient member identification
+  - Service line processing
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+
+Document Generated: May 5, 2026
+Total Pages (estimated): 50-60 pages in standard format
+Suitable for: Architecture review, development reference, compliance documentation
+
+where master config used in which bots
+how the config pass to 835 generator
+which fields passes from the config
+Template how pass to a360 bot
+appsmith and validation
+database and data passing, when we call update data bot
+python script for sftp server
+database creds
+creds locker/ vault
+output of 835 generator
+required segments
+group codes and meanings
+copay 253 -> cas*PR*3*253
+claim level sequestration, service level how its handles
+Math balancing
+rarc and cagc and carc. algorithm for getting these from code

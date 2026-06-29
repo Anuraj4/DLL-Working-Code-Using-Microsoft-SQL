@@ -1,0 +1,12 @@
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Debug\net9.0\Xalta.Edi.BalancingValidation.deps.json
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Debug\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Debug\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.csproj.AssemblyReference.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfoInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfo.cs
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.csproj.CoreCompileInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\refint\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Debug\net9.0\ref\Xalta.Edi.BalancingValidation.dll

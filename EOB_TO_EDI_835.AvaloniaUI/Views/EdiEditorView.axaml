@@ -1,0 +1,517 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EOB_TO_EDI_835.AvaloniaUI.ViewModels"
+             xmlns:m="using:EOB_TO_EDI_835.AvaloniaUI.Models"
+             xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:core="clr-namespace:Xalta.Edi.BalancingValidation.Core;assembly=Xalta.Edi.BalancingValidation"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="EOB_TO_EDI_835.AvaloniaUI.Views.EdiEditorView"
+             x:DataType="vm:EdiEditorViewModel"
+             x:CompileBindings="False">
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- Header Info -->
+        <Border Grid.Row="0" Margin="24,24,24,0" Padding="16" Theme="{StaticResource MaterialCard}">
+            <Grid ColumnDefinitions="*, Auto, *">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="SENDER" Classes="Caption" Opacity="0.5" />
+                    <TextBlock Text="{Binding SenderName}" Classes="Headline6" Foreground="{DynamicResource PrimaryMidBrush}" />
+                </StackPanel>
+                
+                <avalonia:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="32" Height="32" Opacity="0.3" Margin="16,0" />
+                
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                    <TextBlock Text="RECEIVER" Classes="Caption" Opacity="0.5" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding ReceiverName}" Classes="Headline6" Foreground="{DynamicResource SecondaryMidBrush}" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding FilePath, Converter={StaticResource FileNameConverter}}" Classes="Caption" Opacity="0.4" HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="1" Margin="12">
+            <!-- Raw EDI View -->
+            <TabItem Header="RAW SEGMENTS">
+                <Grid ColumnDefinitions="2*, 3*" Margin="12">
+                    <!-- Segment List -->
+                    <Border Grid.Column="0" Classes="Card" Theme="{StaticResource MaterialCard}" Margin="0,0,12,0" Padding="0">
+                        <Grid RowDefinitions="Auto, *">
+                            <Border Grid.Row="0" Background="{DynamicResource MaterialDividerBrush}" Padding="16,12">
+                                <TextBlock Text="Segments" Classes="Subtitle2" />
+                            </Border>
+                            
+                            <ListBox Grid.Row="1" ItemsSource="{Binding Segments}" SelectedItem="{Binding SelectedSegment}">
+                                <ListBox.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Background" Value="{Binding IsHighlighted, Converter={StaticResource HighlightColorConverter}}" />
+                                    </Style>
+                                </ListBox.Styles>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="Auto, *" ToolTip.Tip="{Binding RawContent}">
+                                            <Border Grid.Column="0" Background="{Binding HasError, Converter={StaticResource ErrorColorConverter}}" 
+                                                    Width="4" VerticalAlignment="Stretch" Margin="0,0,8,0" />
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="12,4">
+                                                <TextBlock Text="{Binding Position, StringFormat='[{0}]'}" Width="30" Opacity="0.5" />
+                                                <TextBlock Text="{Binding Tag}" FontWeight="Bold" Width="40" />
+                                                <TextBlock Text="{Binding RawContent}" Opacity="0.6" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- Element Editor -->
+                    <Border Grid.Column="1" Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0">
+                        <Grid RowDefinitions="Auto, *, Auto">
+                            <Border Grid.Row="0" Background="{DynamicResource PrimaryMidBrush}" Padding="16,12">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Segment Editor:" Foreground="White" Opacity="0.7" />
+                                    <TextBlock Text="{Binding SelectedSegment.Tag}" Foreground="White" FontWeight="Bold" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Use HorizontalScrollBarVisibility="Disabled" to force WrapPanel to wrap within the available width -->
+                            <ScrollViewer Grid.Row="1" 
+                                          VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding SelectedSegment.Elements}" Margin="20, 0, 0, 0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Value}" 
+                                                     p1:TextFieldAssist.Label="{Binding Index, StringFormat={}{0:00}}" 
+                                                     Margin="0,0,16,24" 
+                                                     Width="160"
+                                                     Classes="Outline"
+                                                     MinHeight="56"
+                                                     VerticalAlignment="Top"
+                                                     UseFloatingWatermark="True"
+                                                     Background="{Binding HasError, Converter={StaticResource ErrorColorConverter}}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <!-- Actions - Pinned to the bottom right -->
+                            <Border Grid.Row="2" 
+                                    BorderThickness="0,1,0,0" 
+                                    BorderBrush="{DynamicResource MaterialDividerBrush}" 
+                                    Padding="24,16" 
+                                    Background="{DynamicResource MaterialCardBackgroundBrush}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="16">
+                                    <Button Content="RE-VALIDATE" Command="{Binding ReValidateCommand}" Classes="Flat" />
+                                    <Button Content="PRINT TO PDF" Command="{Binding ExportToPdfCommand}" Classes="Outline" Foreground="{DynamicResource SecondaryMidBrush}" />
+                                    <Button Content="SAVE FILE" Command="{Binding SaveChangesCommand}" Classes="Raised" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- Tabular EOB View -->
+            <TabItem Header="EOB TABULAR VIEW">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="12">
+                        <!-- ── BPR / TRN Payment Info ── -->
+                        <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0"
+                                IsVisible="{Binding TransactionHeader, Converter={StaticResource IsNotNullConverter}}">
+                            <StackPanel>
+                                <Border Background="{DynamicResource SecondaryMidBrush}" Padding="10,6">
+                                    <TextBlock Text="PAYMENT INFORMATION (BPR / TRN)" Foreground="White" Classes="Subtitle2" />
+                                </Border>
+                                <Border Padding="12,8">
+                                    <StackPanel Orientation="Horizontal" Spacing="32">
+                                        <StackPanel>
+                                            <TextBlock Text="PAYMENT METHOD" Classes="Caption" Opacity="0.5" />
+                                            <TextBlock Text="{Binding TransactionHeader.PaymentMethod}" FontWeight="Bold" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="PAYMENT AMOUNT" Classes="Caption" Opacity="0.5" />
+                                            <TextBlock Text="{Binding TransactionHeader.PaymentAmount, StringFormat={}{0:C}}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource PrimaryMidBrush}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="PAYMENT DATE" Classes="Caption" Opacity="0.5" />
+                                            <TextBlock Text="{Binding TransactionHeader.PaymentDate}" FontWeight="SemiBold" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="TRACE NUMBER" Classes="Caption" Opacity="0.5" />
+                                            <TextBlock Text="{Binding TransactionHeader.TraceNumber}" FontWeight="SemiBold" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="ORIGINATING ID" Classes="Caption" Opacity="0.5" />
+                                            <TextBlock Text="{Binding TransactionHeader.TraceOriginatingId}" FontWeight="SemiBold" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- ── Payer / Payee Entity Cards ── -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding TransactionHeader, Converter={StaticResource IsNotNullConverter}}">
+                            <!-- Payer -->
+                            <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0" HorizontalAlignment="Stretch">
+                                <StackPanel MinWidth="300">
+                                    <Border Background="{DynamicResource PrimaryMidBrush}" Padding="10,6">
+                                        <TextBlock Text="PAYER (N1*PR)" Foreground="White" Classes="Caption" FontWeight="Bold" />
+                                    </Border>
+                                    <Border Padding="12,8">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="{Binding TransactionHeader.Payer.Name}" FontWeight="Bold" FontSize="13" />
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="ID:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payer.IdQualifier}" FontSize="11" />
+                                                <TextBlock Text="-" FontSize="11" Opacity="0.4" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payer.Id}" FontSize="11" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding TransactionHeader.Payer.Address1}" FontSize="11" Opacity="0.8" />
+                                            <TextBlock FontSize="11" Opacity="0.8">
+                                                <Run Text="{Binding TransactionHeader.Payer.City}" />
+                                                <Run Text=", " />
+                                                <Run Text="{Binding TransactionHeader.Payer.State}" />
+                                                <Run Text=" " />
+                                                <Run Text="{Binding TransactionHeader.Payer.Zip}" />
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
+                                                <TextBlock Text="Contact:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payer.ContactName}" FontSize="11" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Text="Phone:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payer.ContactPhone}" FontSize="11" />
+                                            </StackPanel>
+                                            <ItemsControl ItemsSource="{Binding TransactionHeader.Payer.References}" Margin="0,4,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                                            <TextBlock Text="REF:" FontSize="10" Opacity="0.5" />
+                                                            <TextBlock Text="{Binding Code}" FontSize="10" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding Value}" FontSize="10" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Payee -->
+                            <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0" HorizontalAlignment="Stretch">
+                                <StackPanel MinWidth="300">
+                                    <Border Background="{DynamicResource PrimaryMidBrush}" Padding="10,6">
+                                        <TextBlock Text="PAYEE (N1*PE)" Foreground="White" Classes="Caption" FontWeight="Bold" />
+                                    </Border>
+                                    <Border Padding="12,8">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="{Binding TransactionHeader.Payee.Name}" FontWeight="Bold" FontSize="13" />
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="ID:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payee.IdQualifier}" FontSize="11" />
+                                                <TextBlock Text="-" FontSize="11" Opacity="0.4" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payee.Id}" FontSize="11" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding TransactionHeader.Payee.Address1}" FontSize="11" Opacity="0.8" />
+                                            <TextBlock FontSize="11" Opacity="0.8">
+                                                <Run Text="{Binding TransactionHeader.Payee.City}" />
+                                                <Run Text=", " />
+                                                <Run Text="{Binding TransactionHeader.Payee.State}" />
+                                                <Run Text=" " />
+                                                <Run Text="{Binding TransactionHeader.Payee.Zip}" />
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
+                                                <TextBlock Text="Contact:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payee.ContactName}" FontSize="11" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Text="Phone:" Classes="Caption" Opacity="0.5" />
+                                                <TextBlock Text="{Binding TransactionHeader.Payee.ContactPhone}" FontSize="11" />
+                                            </StackPanel>
+                                            <ItemsControl ItemsSource="{Binding TransactionHeader.Payee.References}" Margin="0,4,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                                            <TextBlock Text="REF:" FontSize="10" Opacity="0.5" />
+                                                            <TextBlock Text="{Binding Code}" FontSize="10" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding Value}" FontSize="10" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Per-Claim Invoice Cards -->
+                        <ItemsControl ItemsSource="{Binding Claims}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0" Margin="0,0,0,8">
+                                        <StackPanel>
+                                            <!-- Claim Header -->
+                                            <Border Background="{DynamicResource SecondaryMidBrush}" Padding="12,8">
+                                                <StackPanel Orientation="Horizontal" Spacing="24">
+                                                    <TextBlock Text="{Binding ClaimId, StringFormat='Claim: {0}'}" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                                    <TextBlock Text="{Binding Status, StringFormat='Status: {0}'}" Foreground="White" Opacity="0.8" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding TotalPaid, StringFormat='Paid: {0:C}'}" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- Entity / Participant Info -->
+                                            <Border Padding="12,8" BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1">
+                                                <StackPanel Orientation="Horizontal" Spacing="32">
+                                                    <StackPanel>
+                                                        <TextBlock Text="PATIENT" Classes="Caption" Opacity="0.5" />
+                                                        <TextBlock Text="{Binding PatientName}" FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding PatientControlNumber, StringFormat='Ctrl#: {0}'}" FontSize="11" Opacity="0.6" />
+                                                    </StackPanel>
+                                                    <StackPanel>
+                                                        <TextBlock Text="PROVIDER" Classes="Caption" Opacity="0.5" />
+                                                        <TextBlock Text="{Binding ProviderName}" FontWeight="SemiBold" />
+                                                    </StackPanel>
+                                                    <StackPanel>
+                                                        <TextBlock Text="PAYER" Classes="Caption" Opacity="0.5" />
+                                                        <TextBlock Text="{Binding PayerName}" FontWeight="SemiBold" />
+                                                    </StackPanel>
+                                                    <StackPanel HorizontalAlignment="Right">
+                                                        <TextBlock Text="CHARGES" Classes="Caption" Opacity="0.5" />
+                                                        <TextBlock Text="{Binding TotalCharge, StringFormat={}{0:C}}" FontWeight="Bold" FontSize="14" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- Claim-level References / Adjustments / Amounts -->
+                                            <Border Padding="12,6" BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1"
+                                                    IsVisible="{Binding ClaimReferences.Count}">
+                                                <StackPanel>
+                                                    <TextBlock Text="REFERENCES" Classes="Caption" Opacity="0.5" Margin="0,0,0,2" />
+                                                    <ItemsControl ItemsSource="{Binding ClaimReferences}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock FontSize="12" Opacity="0.8">
+                                                                    <Run Text="{Binding Code}" FontWeight="SemiBold" />
+                                                                    <Run Text=": " />
+                                                                    <Run Text="{Binding Value}" />
+                                                                </TextBlock>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Padding="12,6" BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1"
+                                                    IsVisible="{Binding ClaimAdjustments.Count}">
+                                                <StackPanel>
+                                                    <TextBlock Text="ADJUSTMENTS (CAS)" Classes="Caption" Opacity="0.5" Margin="0,0,0,4" />
+                                                    <!-- CAS table header -->
+                                                    <Grid ColumnDefinitions="80, *, 100" Margin="0,0,0,2">
+                                                        <TextBlock Grid.Column="0" Text="Group" FontWeight="Bold" FontSize="10" Opacity="0.5" />
+                                                        <TextBlock Grid.Column="1" Text="Reason Code" FontWeight="Bold" FontSize="10" Opacity="0.5" />
+                                                        <TextBlock Grid.Column="2" Text="Amount" FontWeight="Bold" FontSize="10" Opacity="0.5" HorizontalAlignment="Right" />
+                                                    </Grid>
+                                                    <ItemsControl ItemsSource="{Binding ClaimAdjustments}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnDefinitions="80, *, 100" Margin="0,1">
+                                                                    <TextBlock Grid.Column="0" Text="{Binding GroupCode}" FontWeight="SemiBold" FontSize="11" />
+                                                                    <TextBlock Grid.Column="1" Text="{Binding ReasonCode}" FontSize="11" />
+                                                                    <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat={}{0:C}}" FontSize="11" HorizontalAlignment="Right" Foreground="{DynamicResource PrimaryMidBrush}" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Padding="12,6" BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1"
+                                                    IsVisible="{Binding ClaimAmounts.Count}">
+                                                <StackPanel>
+                                                    <TextBlock Text="AMOUNTS (AMT)" Classes="Caption" Opacity="0.5" Margin="0,0,0,4" />
+                                                    <!-- AMT table header -->
+                                                    <Grid ColumnDefinitions="100, *" Margin="0,0,0,2">
+                                                        <TextBlock Grid.Column="0" Text="Code" FontWeight="Bold" FontSize="10" Opacity="0.5" />
+                                                        <TextBlock Grid.Column="1" Text="Value" FontWeight="Bold" FontSize="10" Opacity="0.5" HorizontalAlignment="Right" />
+                                                    </Grid>
+                                                    <ItemsControl ItemsSource="{Binding ClaimAmounts}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnDefinitions="100, *" Margin="0,1">
+                                                                    <TextBlock Grid.Column="0" Text="{Binding Code}" FontWeight="SemiBold" FontSize="11" />
+                                                                    <TextBlock Grid.Column="1" Text="{Binding Value, StringFormat='${0}'}" FontSize="11" HorizontalAlignment="Right" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- Service Lines Header -->
+                                            <Border Background="{DynamicResource PrimaryMidBrush}" Padding="12,6">
+                                                <TextBlock Text="SERVICE LINES (SVC)" Foreground="White" Classes="Caption" FontWeight="Bold" />
+                                            </Border>
+                                            <!-- SVC Column Headers -->
+                                            <Border Padding="12,4" Background="#22FFFFFF">
+                                                <Grid ColumnDefinitions="80, 2*, 80, 100, 100">
+                                                    <TextBlock Grid.Column="0" Text="Date" FontWeight="Bold" FontSize="11" Opacity="0.6" />
+                                                    <TextBlock Grid.Column="1" Text="Procedure" FontWeight="Bold" FontSize="11" Opacity="0.6" />
+                                                    <TextBlock Grid.Column="2" Text="Rev Code" FontWeight="Bold" FontSize="11" Opacity="0.6" HorizontalAlignment="Right" />
+                                                    <TextBlock Grid.Column="3" Text="Charge" FontWeight="Bold" FontSize="11" Opacity="0.6" HorizontalAlignment="Right" />
+                                                    <TextBlock Grid.Column="4" Text="Paid" FontWeight="Bold" FontSize="11" Opacity="0.6" HorizontalAlignment="Right" />
+                                                </Grid>
+                                            </Border>
+                                            <!-- SVC Rows -->
+                                            <ItemsControl ItemsSource="{Binding ServiceLines}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="12,4" BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1">
+                                                            <StackPanel>
+                                                                <!-- Main SVC row -->
+                                                                <Grid ColumnDefinitions="80, 2*, 80, 100, 100">
+                                                                    <TextBlock Grid.Column="0" Text="{Binding ServiceDate}" FontSize="12" Opacity="0.7" />
+                                                                    <TextBlock Grid.Column="1" Text="{Binding ServiceCode}" FontWeight="SemiBold" FontSize="12" />
+                                                                    <TextBlock Grid.Column="2" Text="{Binding RevenueCode}" HorizontalAlignment="Right" FontSize="12" Opacity="0.6" />
+                                                                    <TextBlock Grid.Column="3" Text="{Binding Charge, StringFormat={}{0:C}}" HorizontalAlignment="Right" FontSize="12" />
+                                                                    <TextBlock Grid.Column="4" Text="{Binding Paid, StringFormat={}{0:C}}" HorizontalAlignment="Right" FontSize="12" Foreground="{DynamicResource PrimaryMidBrush}" FontWeight="Bold" />
+                                                                </Grid>
+
+                                                                <!-- SVC-level Adjustments Table -->
+                                                                <Border Margin="80,4,0,0" IsVisible="{Binding ServiceAdjustments.Count}" Padding="0,2">
+                                                                    <StackPanel>
+                                                                        <Grid ColumnDefinitions="60, *, 80">
+                                                                            <TextBlock Grid.Column="0" Text="Group" FontSize="9" Opacity="0.4" FontWeight="Bold" />
+                                                                            <TextBlock Grid.Column="1" Text="Reason" FontSize="9" Opacity="0.4" FontWeight="Bold" />
+                                                                            <TextBlock Grid.Column="2" Text="Adj. Amt" FontSize="9" Opacity="0.4" FontWeight="Bold" HorizontalAlignment="Right" />
+                                                                        </Grid>
+                                                                        <ItemsControl ItemsSource="{Binding ServiceAdjustments}">
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Grid ColumnDefinitions="60, *, 80">
+                                                                                        <TextBlock Grid.Column="0" Text="{Binding GroupCode}" FontSize="10" FontWeight="SemiBold" />
+                                                                                        <TextBlock Grid.Column="1" Text="{Binding ReasonCode}" FontSize="10" />
+                                                                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat={}{0:C}}" FontSize="10" HorizontalAlignment="Right" Foreground="{DynamicResource SecondaryMidBrush}" />
+                                                                                    </Grid>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </StackPanel>
+                                                                </Border>
+
+                                                                <!-- SVC-level References Table -->
+                                                                <Border Margin="80,2,0,0" IsVisible="{Binding ServiceReferences.Count}" Padding="0,2">
+                                                                    <StackPanel>
+                                                                        <Grid ColumnDefinitions="80, *">
+                                                                            <TextBlock Grid.Column="0" Text="REF Code" FontSize="9" Opacity="0.4" FontWeight="Bold" />
+                                                                            <TextBlock Grid.Column="1" Text="Value" FontSize="9" Opacity="0.4" FontWeight="Bold" />
+                                                                        </Grid>
+                                                                        <ItemsControl ItemsSource="{Binding ServiceReferences}">
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Grid ColumnDefinitions="80, *">
+                                                                                        <TextBlock Grid.Column="0" Text="{Binding Code}" FontSize="10" FontWeight="SemiBold" />
+                                                                                        <TextBlock Grid.Column="1" Text="{Binding Value}" FontSize="10" />
+                                                                                    </Grid>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </StackPanel>
+                                                                </Border>
+
+                                                                <!-- SVC-level Amounts Table -->
+                                                                <Border Margin="80,2,0,0" IsVisible="{Binding ServiceAmounts.Count}" Padding="0,2">
+                                                                    <StackPanel>
+                                                                        <Grid ColumnDefinitions="80, *">
+                                                                            <TextBlock Grid.Column="0" Text="AMT Code" FontSize="9" Opacity="0.4" FontWeight="Bold" />
+                                                                            <TextBlock Grid.Column="1" Text="Value" FontSize="9" Opacity="0.4" FontWeight="Bold" HorizontalAlignment="Right" />
+                                                                        </Grid>
+                                                                        <ItemsControl ItemsSource="{Binding ServiceAmounts}">
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Grid ColumnDefinitions="80, *">
+                                                                                        <TextBlock Grid.Column="0" Text="{Binding Code}" FontSize="10" FontWeight="SemiBold" />
+                                                                                        <TextBlock Grid.Column="1" Text="{Binding Value, StringFormat='${0}'}" FontSize="10" HorizontalAlignment="Right" />
+                                                                                    </Grid>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <!-- Validation Results View -->
+            <TabItem Header="VALIDATION ERRORS">
+                <Grid RowDefinitions="Auto, *">
+                    <!-- Validation Summary -->
+                    <Border Grid.Row="0" Theme="{StaticResource MaterialCard}" Margin="12,12,12,0" Padding="16">
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <avalonia:MaterialIcon Kind="{Binding IsValid, Converter={StaticResource SuccessIconConverter}}" 
+                                                   Foreground="{Binding IsValid, Converter={StaticResource SuccessColorConverter}}"
+                                                   Width="32" Height="32" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding IsValid, Converter={StaticResource BooleanToTextConverter}, ConverterParameter='Valid|Validation Failed'}" 
+                                           Classes="Headline6" 
+                                           Foreground="{Binding IsValid, Converter={StaticResource SuccessColorConverter}}" />
+                                <TextBlock Text="{Binding ValidationErrors.Count, StringFormat='Found {0} issues in current file'}" 
+                                           Classes="Caption" Opacity="0.5" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Errors List -->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding ValidationErrors}" SelectedItem="{Binding SelectedError}" Margin="12" IsVisible="{Binding !IsValid}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="core:ValidationError">
+                                <Border BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1" Padding="8,12" ToolTip.Tip="{Binding}">
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <avalonia:MaterialIcon Kind="AlertCircle" Foreground="Red" Width="18" Height="18" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Success State -->
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding IsValid}">
+                        <avalonia:MaterialIcon Kind="CheckCircleOutline" Foreground="Green" Width="64" Height="64" />
+                        <TextBlock Text="File is completely valid!" Classes="Headline6" Opacity="0.5" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Status Message Bar -->
+        <Border Grid.Row="2" Background="{DynamicResource PrimaryMidBrush}" Padding="12,6"
+                IsVisible="{Binding StatusMessage, Converter={StaticResource IsNotNullConverter}}">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="White" FontSize="12" />
+        </Border>
+
+        <!-- Empty State -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                    IsVisible="{Binding !Segments.Count}">
+            <avalonia:MaterialIcon Kind="CursorDefaultOutline" Width="48" Height="48" Opacity="0.3" Margin="0,0,0,16" />
+            <TextBlock Text="No EDI file loaded" Opacity="0.5" />
+        </StackPanel>
+    </Grid>
+</UserControl>

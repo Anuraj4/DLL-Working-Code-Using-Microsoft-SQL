@@ -1,0 +1,1204 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "0ca12bc8-0b3a-43c5-ac37-2a6b6c8e82a8",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "835_Validator_Bot"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "8e25e5f8-9b7e-4c2f-be77-96b21eccd4a6",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "This bot processes the JSON obtained from ASW and creates the final EDI"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "13f16a44-6b1d-4ce1-b0bc-a16b37c6f773",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "<------------------Bot Execution Starts Here------------------>"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "528dfea8-1bff-407d-a74f-dbbde877d7ae",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "34f3298b-1dad-4c14-970a-17f09d07aaaf",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Calling Config Bot"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "15d825a6-2f22-439e-a50c-810bbbea4085",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": []
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Config_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "DICTIONARY",
+            "dictionary": [
+              {
+                "key": "oDictConfigValues",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "pDictConfigValues"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "uid": "cf194510-0736-404a-8c75-85cc25c0a933",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "88600061-7a46-4194-b063-15c9ba7c2553",
+              "commandName": "if",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "3bd5cc72-3678-4d1f-a34c-bef06489d6b0",
+                  "commandName": "createFolder",
+                  "packageName": "Folder",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "folderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Input"
+                      }
+                    },
+                    {
+                      "name": "isOverwrite",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    }
+                  ]
+                }
+              ],
+              "branches": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "folderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Input"
+                      }
+                    },
+                    {
+                      "name": "waitTimeout",
+                      "value": {
+                        "type": "NUMBER",
+                        "number": "10"
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "folderDoesNotExists",
+                    "packageName": "Folder"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "70e2f935-2869-4332-8120-87d2ce266fc9",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Input"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrInputFolderPath"
+              }
+            },
+            {
+              "uid": "9236f3c9-b69d-418c-b272-4ef8fbd41167",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrInputFolderPath$\\input.txt"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrInputFilePath"
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Creating Input Folder and Input File Path"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "b1b8388b-3dcd-4551-8398-711d9f1f7609",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Formating data from raw payload to write in input file"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "89448a8b-e5b0-46ea-a798-478c9f360e73",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "c69d8858-cc38-49aa-98b1-aea57dee09a4",
+              "commandName": "connect",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "connectionMode",
+                  "value": {
+                    "type": "STRING",
+                    "string": "USER"
+                  }
+                },
+                {
+                  "name": "databaseProvider",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SQLOLEDB.1"
+                  }
+                },
+                {
+                  "name": "server",
+                  "value": {
+                    "type": "STRING",
+                    "string": "98.110.59.213:61234"
+                  }
+                },
+                {
+                  "name": "database",
+                  "value": {
+                    "type": "STRING",
+                    "string": "VeradigmDB"
+                  }
+                },
+                {
+                  "name": "user",
+                  "value": {
+                    "type": "STRING",
+                    "string": "temp"
+                  }
+                },
+                {
+                  "name": "auth",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation@123"
+                  }
+                },
+                {
+                  "name": "instance",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                },
+                {
+                  "name": "isUserDefinedDriver",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "Default"
+                },
+                "sessionTarget": "LOCAL"
+              }
+            },
+            {
+              "uid": "c9726c05-6614-4e5c-b672-311674ea6f14",
+              "commandName": "exportToDataTable",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "query",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "SELECT fileName, updated_edi_data from validation_inprogress_data where id = $iNumUpdateRowId.Number:toString$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pTabSelectedData"
+              }
+            },
+            {
+              "uid": "c10e3b1e-73ee-4186-912d-9c56f69a786f",
+              "commandName": "insertUpdateDelete",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "query",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "DELETE from validation_inprogress_data where id = $iNumUpdateRowId.Number:toString$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "Default"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "83092208-cb6c-43fa-911f-3b8d8147fe8a",
+              "commandName": "disconnect",
+              "packageName": "Database",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "dosaveData",
+                  "value": {
+                    "boolean": false,
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "sessionName": {
+                      "string": "Default",
+                      "type": "STRING"
+                    },
+                    "type": "SESSION"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "11db8f34-5962-42df-ac70-0741d87eb51f",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pTabSelectedData[0]{fileName}$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrFileName"
+              }
+            },
+            {
+              "uid": "0e71065f-7941-48c6-a857-0bc4808b1493",
+              "commandName": "Comment",
+              "packageName": "Comment",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "comment",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Removing Extension from File name"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "27fdb475-f13c-4452-bb87-b6a039deeb1d",
+              "commandName": "beforeAfter",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrFileName$"
+                  }
+                },
+                {
+                  "name": "getCharacters",
+                  "value": {
+                    "type": "STRING",
+                    "string": "AFTER"
+                  }
+                },
+                {
+                  "name": "afterString",
+                  "value": {
+                    "type": "STRING",
+                    "string": ".edi"
+                  }
+                },
+                {
+                  "name": "afterOccurrence",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "1"
+                  }
+                },
+                {
+                  "name": "ifNoMatchFound",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SOURCE"
+                  }
+                },
+                {
+                  "name": "noOfCharsToGet",
+                  "value": {
+                    "type": "STRING",
+                    "string": "ALL"
+                  }
+                },
+                {
+                  "name": "isCaseSensitive",
+                  "value": {
+                    "type": "STRING",
+                    "string": "false"
+                  }
+                },
+                {
+                  "name": "trimSpaces",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                },
+                {
+                  "name": "removeEnter",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrFileName"
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Formating data from raw payload to write in input file"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "aa4927b5-ecc1-4640-97fc-991929f1ece9",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Creating Output Folder and Output File Path"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "b5f627b2-a880-447c-9e77-4ed4db97aaac",
+          "commandName": "step",
+          "packageName": "Step",
+          "children": [
+            {
+              "uid": "44720561-790c-4b21-9483-936a055cc0c8",
+              "commandName": "if",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "5e6f8639-f1e8-4dc4-9f40-66c85762fae4",
+                  "commandName": "createFolder",
+                  "packageName": "Folder",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "folderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Output"
+                      }
+                    },
+                    {
+                      "name": "isOverwrite",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": false
+                      }
+                    }
+                  ]
+                }
+              ],
+              "branches": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "attributes": [
+                    {
+                      "name": "folderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Output"
+                      }
+                    },
+                    {
+                      "name": "waitTimeout",
+                      "value": {
+                        "type": "NUMBER",
+                        "number": "10"
+                      }
+                    }
+                  ],
+                  "name": "condition",
+                  "value": {
+                    "type": "CONDITIONAL",
+                    "conditionalName": "folderDoesNotExists",
+                    "packageName": "Folder"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "46bcc315-48e5-46c0-9478-c2e62f778b3a",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pDictConfigValues{FinalEdiGeneratorRootFolderPath}$\\Output"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrOutputFolderPath"
+              }
+            },
+            {
+              "uid": "54f0c604-b421-4645-a5c2-e4a845b5535f",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrOutputFolderPath$\\$pStrFileName$.edi"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "pStrOutputFilePath"
+              }
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "title",
+              "value": {
+                "type": "STRING",
+                "string": "Creating Output Folder and Output File Path"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "221a50cd-a826-436f-83ff-613edcc67244",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Creating Input File"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "4e06f030-ea09-4b43-b8d3-125be6281185",
+          "commandName": "logToFile",
+          "packageName": "LogToFile",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "expression": "file://$pStrInputFilePath$"
+              }
+            },
+            {
+              "name": "logContent",
+              "value": {
+                "type": "STRING",
+                "expression": "{\n\"updated_edi_data\": $pTabSelectedData[0]{updated_edi_data}$\n}"
+              }
+            },
+            {
+              "name": "appendTimestamp",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "logOption",
+              "value": {
+                "type": "STRING",
+                "string": "OVERWRITE_FILE"
+              }
+            },
+            {
+              "name": "encodingValue",
+              "value": {
+                "type": "STRING",
+                "string": "ANSI"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "b022c55a-6649-4e21-bbd5-3c99ac603039",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Running the EXE and processing the input"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "1fa9b214-d6a8-4999-af3e-5e934c5d4799",
+          "commandName": "runApp",
+          "packageName": "Application",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "expression": "file://$pDictConfigValues{CmdFilePath}$"
+              }
+            },
+            {
+              "name": "startInPath",
+              "value": {
+                "type": "STRING",
+                "string": ""
+              }
+            },
+            {
+              "name": "parameters",
+              "value": {
+                "type": "STRING",
+                "expression": "/c  \"\"$pDictConfigValues{FinalEdiGeneratorExePath}$\" \"$pStrInputFilePath$\" \"$pStrOutputFilePath$\"\""
+              }
+            }
+          ]
+        },
+        {
+          "uid": "2bc9e5d3-f8f8-4645-9efc-cc9837f56896",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Call Upload/Download bot to upload files on SFTP"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "a5317b69-633d-469f-9d16-67f28e00db72",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": [
+                    {
+                      "key": "iBoolEnableUpload",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "key": "iStrUploadRemoteFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{UploadRemoteFolderPath}$"
+                      }
+                    },
+                    {
+                      "key": "iStrUploadLocalFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{UploadLocalFolderPath}$"
+                      }
+                    },
+                    {
+                      "key": "iStrPythonScriptPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{PythonScriptPath}$"
+                      }
+                    }
+                  ]
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/SFTP_Download_Upload_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "72ebb2a3-bd28-499d-b8e2-657ff16c7668",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "d841b9a6-caa1-4c47-ae7c-15c9071dbb61",
+              "commandName": "messageBox",
+              "packageName": "MessageBox",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "title",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation Anywhere Enterprise Client"
+                  }
+                },
+                {
+                  "name": "content",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ on $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "scrollLines",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "30"
+                  }
+                },
+                {
+                  "name": "closeMsgBox",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "type": "NUMBER",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleNumber"
+    },
+    {
+      "type": "STRING",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleString"
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pStrInputFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\Omkar Vasekar\\OneDrive - Xalta Technology Services Pvt Ltd\\Documents\\Veradigm\\BotResources\\Input"
+      }
+    },
+    {
+      "name": "pStrInputFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrOutputFolderPath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\Omkar Vasekar\\OneDrive - Xalta Technology Services Pvt Ltd\\Documents\\Veradigm\\BotResources\\Output"
+      }
+    },
+    {
+      "name": "pStrOutputFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pStrExecutableFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\Omkar Vasekar\\OneDrive - Xalta Technology Services Pvt Ltd\\Documents\\Veradigm\\BotResources\\Executable\\EDI835POC.exe"
+      }
+    },
+    {
+      "name": "pStrInputData",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "Window1",
+      "description": "",
+      "type": "WINDOW",
+      "readOnly": true,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "WINDOW",
+        "window": {
+          "name": "C:\\Users\\Omkar Vasekar\\source\\repos\\EDI835POC\\EDI835POC\\bin\\Debug\\net9.0\\EDI835POC.exe",
+          "path": "C:\\Users\\Omkar Vasekar\\source\\repos\\EDI835POC\\EDI835POC\\bin\\Debug\\net9.0\\EDI835POC.exe",
+          "class": "ConsoleWindowClass",
+          "handle": "3017156",
+          "isChild": false,
+          "location": {
+            "top": 96,
+            "left": 96
+          },
+          "size": {
+            "height": 647,
+            "width": 1119
+          },
+          "presetType": "NONE",
+          "windowType": "NATIVE",
+          "browserTabUrl": "",
+          "browserTabOpenNewWindow": false,
+          "nameCaseInsensitive": false,
+          "virtualType": "VIRTUAL_TYPE_NONE",
+          "virtualPath": ""
+        }
+      }
+    },
+    {
+      "name": "pStrFileName",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pDictConfigValues",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "iNumUpdateRowId",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pTabSelectedData",
+      "description": "",
+      "type": "TABLE",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "TABLE",
+        "table": {
+          "schema": [
+            {
+              "type": "STRING"
+            }
+          ],
+          "rows": [
+            {
+              "values": [
+                {
+                  "type": "STRING",
+                  "string": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Application",
+      "version": "3.11.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Database",
+      "version": "5.6.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Folder",
+      "version": "6.13.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Step",
+      "version": "2.7.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.11.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

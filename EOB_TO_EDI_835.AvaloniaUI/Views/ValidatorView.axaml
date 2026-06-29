@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:EOB_TO_EDI_835.AvaloniaUI.ViewModels"
+             xmlns:p1="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="EOB_TO_EDI_835.AvaloniaUI.Views.ValidatorView"
+             x:DataType="vm:ValidatorViewModel"
+             x:CompileBindings="False">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="24">
+        <!-- Header / File Selection -->
+        <Border Grid.Row="0" Theme="{StaticResource MaterialCard}" Padding="20" Margin="0,0,0,24">
+            <StackPanel Spacing="20">
+                <TextBlock Text="EDI VALIDATOR" Classes="Headline5" Foreground="{DynamicResource PrimaryMidBrush}" />
+                
+                <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                    <TextBox Grid.Row="0" Grid.Column="0" 
+                             Text="{Binding SelectedFilePath}" 
+                             Watermark="Select EDI, TXT, or 835 file..."
+                             Margin="0,0,12,0"
+                             Classes="Outline" />
+                    
+                    <Button Grid.Row="0" Grid.Column="1" 
+                            Content="BROWSE" 
+                            Command="{Binding $parent[Window].DataContext.PickValidatorFilePathCommand}" 
+                            Classes="Outline" />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Spacing="24" VerticalAlignment="Center">
+                    <TextBlock Text="SNIP Level:" VerticalAlignment="Center" FontWeight="SemiBold" />
+                    <RadioButton Content="L1 (Syntax)" IsChecked="{Binding SelectedSnipLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter=1}" />
+                    <RadioButton Content="L2 (Schema)" IsChecked="{Binding SelectedSnipLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter=2}" />
+                    <RadioButton Content="L3 (Balance)" IsChecked="{Binding SelectedSnipLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter=3}" />
+                    <RadioButton Content="L4 (All Levels)" IsChecked="{Binding SelectedSnipLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter=4}" />
+
+                    <Button Content="RUN VALIDATION" 
+                            Command="{Binding RunValidationCommand}" 
+                            Classes="Raised" 
+                            Margin="40,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Error List -->
+        <Border Grid.Row="1" Theme="{StaticResource MaterialCard}" Padding="0">
+            <Grid RowDefinitions="Auto, *">
+                <Border Grid.Row="0" Background="{DynamicResource MaterialDividerBrush}" Padding="16,12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                         <p1:MaterialIcon Kind="AlertCircleOutline" Width="20" Height="20" />
+                         <TextBlock Text="Validation Results" Classes="Subtitle1" />
+                    </StackPanel>
+                </Border>
+                
+                <ListBox Grid.Row="1" ItemsSource="{Binding Errors}" Padding="12">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource MaterialDividerBrush}" BorderThickness="0,0,0,1" Padding="8,12">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <p1:MaterialIcon Kind="CloseCircle" Foreground="Red" Width="18" Height="18" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding Errors.Count, Converter={StaticResource IsZeroConverter}}">
+                     <p1:MaterialIcon Kind="CheckCircleOutline" Foreground="Green" Width="64" Height="64" />
+                     <TextBlock Text="No errors found" Classes="Headline6" Opacity="0.5" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Footer / Navigation -->
+        <Border Grid.Row="2" Margin="0,24,0,0">
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center" Opacity="0.7" />
+                <Button Grid.Column="1" 
+                        Content="OPEN IN EDITOR" 
+                        Command="{Binding OpenInEditorCommand}" 
+                        Classes="Flat" 
+                        IsVisible="{Binding SelectedFilePath, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+            </Grid>
+        </Border>
+
+        <ProgressBar Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
+    </Grid>
+</UserControl>

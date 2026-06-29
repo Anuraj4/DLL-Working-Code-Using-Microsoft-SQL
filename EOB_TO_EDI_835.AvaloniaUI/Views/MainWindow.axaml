@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EOB_TO_EDI_835.AvaloniaUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+        x:Class="EOB_TO_EDI_835.AvaloniaUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="False"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="EOB_TO_EDI_835 - Enterprise Generator"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <material:NavigationDrawer LeftDrawerOpened="{Binding IsDrawerOpen, Mode=TwoWay}"
+                               LeftDrawerWidth="250"
+                               x:CompileBindings="False">
+        <material:NavigationDrawer.LeftDrawerContent>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="16" Spacing="8">
+                    <TextBlock Text="EDI 835" Classes="Headline5" FontWeight="Bold"/>
+                    <TextBlock Text="Enterprise UI" Classes="Subtitle1" Opacity="0.7"/>
+                </StackPanel>
+                
+                <ListBox ItemsSource="{Binding NavigationItems}" 
+                         SelectedItem="{Binding SelectedNavigationItem}"
+                         Background="Transparent"
+                         Margin="0,16,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:NavigationItem">
+                            <StackPanel Orientation="Horizontal" Spacing="16" Margin="8">
+                                <avalonia:MaterialIcon Kind="{Binding IconKind}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="16"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </material:NavigationDrawer.LeftDrawerContent>
+
+        <DockPanel>
+            <material:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid" Padding="16,8">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <Button Classes="Flat" Command="{Binding ToggleDrawerCommand}" Grid.Column="0">
+                        <avalonia:MaterialIcon Kind="Menu" Width="24" Height="24" />
+                    </Button>
+                    <TextBlock Grid.Column="1" Text="{Binding SelectedNavigationItem.Name}" Classes="Headline6" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                </Grid>
+            </material:ColorZone>
+
+            <ContentControl Content="{Binding CurrentViewModel}" Padding="16" />
+        </DockPanel>
+    </material:NavigationDrawer>
+
+</Window>

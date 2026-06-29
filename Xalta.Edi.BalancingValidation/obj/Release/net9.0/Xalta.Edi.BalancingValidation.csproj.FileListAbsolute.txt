@@ -1,0 +1,48 @@
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.deps.json
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.AssemblyReference.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfoInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfo.cs
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.CoreCompileInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\refint\Xalta.Edi.BalancingValidation.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\ref\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.deps.json
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.AssemblyReference.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfoInputs.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfo.cs
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.CoreCompileInputs.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\refint\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\ref\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.deps.json
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.AssemblyReference.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfoInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfo.cs
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.CoreCompileInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\refint\Xalta.Edi.BalancingValidation.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\ref\Xalta.Edi.BalancingValidation.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.deps.json
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\bin\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.AssemblyReference.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfoInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.AssemblyInfo.cs
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.csproj.CoreCompileInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\refint\Xalta.Edi.BalancingValidation.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\Xalta.Edi.BalancingValidation.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.BalancingValidation\obj\Release\net9.0\ref\Xalta.Edi.BalancingValidation.dll

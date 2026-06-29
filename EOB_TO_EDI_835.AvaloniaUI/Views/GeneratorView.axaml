@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EOB_TO_EDI_835.AvaloniaUI.ViewModels"
+             xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="EOB_TO_EDI_835.AvaloniaUI.Views.GeneratorView"
+             x:DataType="vm:GeneratorViewModel"
+             x:CompileBindings="False">
+    <UserControl.Styles>
+        <Style Selector="Border.dropzone">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MaterialDividerBrush}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.dropzone:pointerover">
+            <Setter Property="Background" Value="#10000000" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Border.dropzone.dragging">
+            <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryMidBrush}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="24">
+            <!-- Header Card -->
+            <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="*, Auto" Background="{DynamicResource PrimaryMidBrush}" Height="60" IsHitTestVisible="False">
+                        <TextBlock Text="Generator Configuration" 
+                                   Foreground="White"
+                                   VerticalAlignment="Center" 
+                                   Margin="24,0" 
+                                   Classes="Headline6" />
+                        <avalonia:MaterialIcon Grid.Column="1" Kind="CogOutline" Foreground="White" Width="28" Height="28" Margin="24,0" />
+                    </Grid>
+                    
+                    <StackPanel Margin="24" Spacing="16">
+                        <UniformGrid Columns="2" Rows="2">
+                            <!-- Input Dir Card -->
+                            <Border Classes="dropzone" Margin="8" DragDrop.AllowDrop="True" Name="InputDropZone" PointerPressed="OnInputClicked">
+                                <StackPanel Spacing="8" VerticalAlignment="Center">
+                                    <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="48" Height="48" Foreground="{DynamicResource PrimaryMidBrush}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Input EOB Folder/File" FontWeight="Bold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Drop here or Click to select" FontSize="12" Opacity="0.5" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding InputPath}" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryMidBrush}" IsVisible="{Binding InputPath, Converter={StaticResource IsNotNullConverter}}" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Output Dir Card -->
+                            <Border Classes="dropzone" Margin="8" DragDrop.AllowDrop="True" Name="OutputDropZone" PointerPressed="OnOutputClicked">
+                                <StackPanel Spacing="8" VerticalAlignment="Center">
+                                    <avalonia:MaterialIcon Kind="FolderDownloadOutline" Width="48" Height="48" Foreground="{DynamicResource PrimaryMidBrush}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Output EDI Directory" FontWeight="Bold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Drop here or Click to select" FontSize="12" Opacity="0.5" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding OutputPath}" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryMidBrush}" IsVisible="{Binding OutputPath, Converter={StaticResource IsNotNullConverter}}" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Config Card -->
+                            <Border Classes="dropzone" Margin="8" DragDrop.AllowDrop="True" Name="ConfigDropZone" PointerPressed="OnConfigClicked">
+                                <StackPanel Spacing="8" VerticalAlignment="Center">
+                                    <avalonia:MaterialIcon Kind="FileCogOutline" Width="48" Height="48" Foreground="{DynamicResource PrimaryMidBrush}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Mapping Configuration" FontWeight="Bold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Drop .xlsx here or Click" FontSize="12" Opacity="0.5" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding ConfigPath, Converter={StaticResource FileNameConverter}}" FontSize="11" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryMidBrush}" IsVisible="{Binding ConfigPath, Converter={StaticResource IsNotNullConverter}}" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Template Card -->
+                            <Border Classes="dropzone" Margin="8" DragDrop.AllowDrop="True" Name="TemplateDropZone" PointerPressed="OnTemplateClicked">
+                                <StackPanel Spacing="8" VerticalAlignment="Center">
+                                    <avalonia:MaterialIcon Kind="FileTable" Width="48" Height="48" Foreground="{DynamicResource PrimaryMidBrush}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="EOB Template" FontWeight="Bold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Drop .xlsx here or Click" FontSize="12" Opacity="0.5" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding TemplatePath, Converter={StaticResource FileNameConverter}}" FontSize="11" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryMidBrush}" IsVisible="{Binding TemplatePath, Converter={StaticResource IsNotNullConverter}}" />
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+
+                        <Separator Height="16" />
+
+                        <!-- Options -->
+                        <StackPanel Orientation="Horizontal" Spacing="48">
+                            <CheckBox Content="Parallel Processing" IsChecked="{Binding EnableParallelProcessing}" />
+                            <CheckBox Content="Upload to Appsmith" IsChecked="{Binding EnableAppsmith}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Action Card -->
+            <Border Classes="Card" Theme="{StaticResource MaterialCard}" Padding="24">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding StatusMessage}" Classes="Subtitle2" />
+                            <ProgressBar Value="{Binding ProgressValue}" Margin="0,8,0,0" IsIndeterminate="{Binding IsBusy}" />
+                        </StackPanel>
+                        
+                        <Button Grid.Column="1" 
+                                Command="{Binding RunGeneratorCommand}"
+                                Content="START PIPELINE"
+                                IsEnabled="{Binding !IsBusy}"
+                                Classes="Raised" 
+                                Height="48"
+                                Padding="32,0" 
+                                Margin="24,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

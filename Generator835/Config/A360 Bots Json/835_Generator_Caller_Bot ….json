@@ -1,0 +1,455 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "f2732cf6-4637-4c32-96d9-f9cb30b166c1",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "835_Generator_Caller_Bot"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "fc41ad92-1342-46f8-8c6a-84e4ef8c1a42",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "This bot is responsible for running the exe fille which is generates the 835 file."
+          }
+        }
+      ]
+    },
+    {
+      "uid": "3359735d-9cb8-406b-a888-c20511749073",
+      "commandName": "Comment",
+      "packageName": "Comment",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "comment",
+          "value": {
+            "type": "STRING",
+            "string": "<---------------Bot execution starts here--------------->"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "864b975a-c967-4251-8023-a8676fd234e5",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "e1f0cacb-6651-4be1-a2c6-19df069734d2",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Calling Config Bot "
+              }
+            }
+          ]
+        },
+        {
+          "uid": "152f6cbd-d81d-48a0-9f1e-6a8ab784183e",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": [
+                    {
+                      "key": "iStrConfigFilePath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$iStrConfigFilePath$"
+                      }
+                    }
+                  ]
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/Config_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "DICTIONARY",
+            "dictionary": [
+              {
+                "key": "oDictConfigValues",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "pDictConfigValues"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "uid": "6bb89f38-9a86-4a6a-9ad5-31e9225e406d",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Call SFTP download/upload bot with download configuration"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "8c0d8a49-1060-494b-a2da-069e86f68289",
+          "commandName": "runTask",
+          "packageName": "TaskBot",
+          "disabled": true,
+          "attributes": [
+            {
+              "name": "taskbot",
+              "value": {
+                "type": "TASKBOT",
+                "taskbotInput": {
+                  "type": "DICTIONARY",
+                  "dictionary": [
+                    {
+                      "key": "iBoolEnableDownload",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "key": "iStrDownloadRemoteFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{DownloadRemoteFolderPath}$"
+                      }
+                    },
+                    {
+                      "key": "iStrDownloadLocalFolderPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{DownloadLocalFolderPath}$"
+                      }
+                    },
+                    {
+                      "key": "iStrPythonScriptPath",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$pDictConfigValues{PythonScriptPath}$"
+                      }
+                    }
+                  ]
+                },
+                "taskbotFile": {
+                  "type": "FILE",
+                  "string": "repository:///Automation%20Anywhere/Bots/835%20POC/SFTP_Download_Upload_Bot"
+                }
+              }
+            },
+            {
+              "name": "repeatOption",
+              "value": {
+                "type": "STRING",
+                "string": "DO_NOT_REPEAT"
+              }
+            },
+            {
+              "name": "delayNextRepetition",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        },
+        {
+          "uid": "bdc6b6d6-1cf9-40bc-9969-c925350110ba",
+          "commandName": "Comment",
+          "packageName": "Comment",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "comment",
+              "value": {
+                "type": "STRING",
+                "string": "Opening Cmd and running the command"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "5a9cebc4-0958-4e64-b48d-b4105ba039e9",
+          "commandName": "runApp",
+          "packageName": "Application",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "expression": "file://$pDictConfigValues{CmdFilePath}$"
+              }
+            },
+            {
+              "name": "startInPath",
+              "value": {
+                "type": "STRING",
+                "string": ""
+              }
+            },
+            {
+              "name": "parameters",
+              "value": {
+                "type": "STRING",
+                "expression": "/c \"\"$pDictConfigValues{EdiGeneratorExePath}$\" --input \"$pDictConfigValues{OutputCsvFolderPath}$\" --output \"$pDictConfigValues{EdiGeneratorEdiOutputPath}$\" --config \"$pDictConfigValues{EdiGeneratorConfigFilePath}$\" --template \"$pDictConfigValues{EdiGeneratorTemplateFilePath}$\" --upload $pDictConfigValues{IsEdiGeneratorUploadToDbEnabled}$\""
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "aeb08f60-f2b5-4bca-b806-03af4524a6b0",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "f48cb041-471e-4ad8-825a-f66d4c0b6714",
+              "commandName": "messageBox",
+              "packageName": "MessageBox",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "title",
+                  "value": {
+                    "type": "STRING",
+                    "string": "Automation Anywhere Enterprise Client"
+                  }
+                },
+                {
+                  "name": "content",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$pStrErrorMessage$ on $pNumErrorLineNumber.Number:toString$"
+                  }
+                },
+                {
+                  "name": "scrollLines",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "30"
+                  }
+                },
+                {
+                  "name": "closeMsgBox",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                },
+                {
+                  "name": "timeOut",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "5"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "pStrErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "pNumErrorLineNumber"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "type": "NUMBER",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleNumber"
+    },
+    {
+      "type": "STRING",
+      "subtype": "UNDEFINED",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "name": "SampleString"
+    },
+    {
+      "name": "pStrErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "pNumErrorLineNumber",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "pDictConfigValues",
+      "description": "",
+      "type": "DICTIONARY",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "DICTIONARY",
+        "dictionary": []
+      }
+    },
+    {
+      "name": "iStrConfigFilePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": true,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "Application",
+      "version": "3.11.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Comment",
+      "version": "2.17.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "MessageBox",
+      "version": "3.8.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.10.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "TaskBot",
+      "version": "2.10.0-20241119-100739",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}

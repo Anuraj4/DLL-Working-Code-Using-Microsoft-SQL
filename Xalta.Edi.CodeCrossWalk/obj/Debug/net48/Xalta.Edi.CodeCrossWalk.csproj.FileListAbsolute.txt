@@ -1,0 +1,66 @@
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.Parser.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.Framework.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ExcelNumberFormat.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Microsoft.Bcl.HashCode.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\RBush.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\SixLabors.Fonts.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Buffers.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Memory.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Numerics.Vectors.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.AssemblyReference.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfoInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfo.cs
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.CoreCompileInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Ed.06D909AD.Up2Date
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.Parser.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ExcelNumberFormat.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Microsoft.Bcl.HashCode.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\RBush.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\SixLabors.Fonts.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Buffers.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Memory.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Numerics.Vectors.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.AssemblyReference.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfoInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfo.cs
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.CoreCompileInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Ed.06D909AD.Up2Date
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ClosedXML.Parser.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\DocumentFormat.OpenXml.Framework.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\ExcelNumberFormat.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\Microsoft.Bcl.HashCode.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\RBush.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\SixLabors.Fonts.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Buffers.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Memory.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Numerics.Vectors.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.AssemblyReference.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfoInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.AssemblyInfo.cs
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.csproj.CoreCompileInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Ed.06D909AD.Up2Date
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.CodeCrossWalk\obj\Debug\net48\Xalta.Edi.CodeCrossWalk.pdb

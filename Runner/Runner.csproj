@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <AssemblyName>Runner</AssemblyName>
+    <RootNamespace>Runner</RootNamespace>
+
+    <!-- Self-contained publish settings for A360 deployment -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EOB_TO_EDI_835\EOB_TO_EDI_835.csproj" />
+    <ProjectReference Include="..\Generator835\Edi.Generator835.csproj" />
+    <ProjectReference Include="..\Xalta.Edi.BalancingValidation\Xalta.Edi.BalancingValidation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EdiFabric" Version="10.7.6" />
+    <PackageReference Include="EdiFabric.Templates.Hipaa" Version="2.7.6" />
+    <PackageReference Include="EdiFabric.Templates.X12" Version="2.7.6" />
+
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
+</Project>

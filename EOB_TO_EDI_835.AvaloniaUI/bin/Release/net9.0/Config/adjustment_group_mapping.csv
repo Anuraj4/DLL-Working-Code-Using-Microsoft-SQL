@@ -1,0 +1,52 @@
+EOB Type,AdjustmentText,Expectation,CAGC,CARC,Description
+,Contractual Obligation,,CO,,Contractual Obligations
+,Patient Responsibility,,PR,,Patient Responsibility
+,Other Adjustments,,OA,,Other Adjustments
+,Payer Initiated Reductions,,PI,,Payer Initiated Reductions
+,CO,,CO,,Contractual Obligations (code pass-through)
+,PR,,PR,,Patient Responsibility (code pass-through)
+,OA,,OA,,Other Adjustments (code pass-through)
+,PI,,PI,,Payer Initiated Reductions (code pass-through)
+Humana QR,CO131,DENIAL,CO,131,Claim specific negotiated discount.Alert: This procedure code was added/changed because it more accurately describes the services rendered.
+Humana QR,CO16,DENIAL,CO,16,Claim/service lacks information or has submission/billing error(s). Usage: Do not use this code for claims attachment(s)/other documentation. At least one Remark Code must be provided (may be comprised of either the NCPDP Reject Reason Code, or Remittance Advice Remark Code that is not an ALERT.) Refer to the 835 Healthcare Policy Identification Segment (loop 2110 Service Payment Information REF), if present.
+Humana QR,CO18,DENIAL,CO,18,Exact duplicate claim/service (Use only with Group Code OA except where state workers' compensation regulations requires CO)
+Humana QR,CO246,DENIAL,CO,246,This non-payable code is for required reporting only.
+Humana QR,CO253,ADJUSTMENT,CO,253,Sequestration - reduction in federal payment
+Humana QR,CO45,ADJUSTMENT,CO,45,Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)
+Humana QR,CO97,DENIAL,CO,97,The benefit for this service is included in the payment/allowance for another service/procedure that has already been adjudicated. Usage: Refer to the 835 Healthcare Policy Identification Segment (loop 2110 Service Payment Information REF), if present.
+Humana QR,PR2,PT RESP,PR,2,Coinsurance Amount
+Humana QR,PR243,DENIAL,PR,243,Services not authorized by network/primary care providers.
+Fidelis Care,3,PT RESP,PR,3,Co-payment Amount
+Fidelis Care,45,ADJUSTMENT,CO,45,Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)
+Fidelis Care,256,DENIAL,CO,256,Service not payable per managed care contract.
+Fidelis Care,KNC,DENIAL,CO,96,Not a Contracted Service
+Fidelis Care,N448,REMARK,N448,,This drug/service/supply is not included in the fee schedule or contracted/legislated fee arrangement.
+Humana QR,M76,REMARK,M76,,Missing/incomplete/invalid diagnosis or condition
+Humana QR,N130,REMARK,N130,,Consult plan benefit documents/guidelines for information about restrictions for this service
+Humana QR,N19,REMARK,N19,,Procedure code incidental to primary procedure
+Humana QR,N192,REMARK,N192,,Patient is a Medicaid/Qualified Medicare Beneficiary
+Fidelis Care,253,ADJUSTMENT,CO,253,Sequestration - reduction in federal payment
+EmblemHealth,413,DENIAL,CO,11,Diagnosis Code(s) Inappropriately Coded
+EmblemHealth,BO8,DENIAL,,,Member's plan does not pay for deductibles that must be met for another plan.
+EmblemHealth,GB1,DENIAL,,,The subscriber's benefit plan does not cover these services. No payment will be made.
+aetna,1,ADJUSTMENT,CO,253,This adjustment in provider payment reflects recent changes made in CMS/Medicare reimbursement levels due to sequestration.
+aetna,2,ADJUSTMENT,CO,45,We made our payment according to the Medicare rate
+aetna,3,DENIAL,CO,97,We do not consider payment for any portion of this service as it is incidental to other services provided to the patient for which reimbursement was, or will be, considered.
+UnitedHealthcare,PI131,ADJUSTMENT,PI,131,Payer Initial Reductions - Claim Specific Negotiated Discount
+UnitedHealthcare,PR2,PT RESP,PR,2,Patient Responsibility - Coinsurance Amount
+OptumPay,3,PT RESP,PR,3,Co-Payment Amount
+OptumPay,23,ADJUSTMENT,OA,23,The impact of prior payer(s) adjudication including payments and/or adjustments
+Fidelis/Wellcare,45,ADJUSTMENT,CO,45,Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)
+Fidelis/Wellcare,253,ADJUSTMENT,CO,253,This adjustment in provider payment reflects recent changes made in CMS/Medicare reimbursement levels due to sequestration.
+wellcare,PI 253,ADJUSTMENT,PI,253,This adjustment in provider payment reflects recent changes made in CMS/Medicare reimbursement levels due to sequestration.
+wellcare,CO 45,ADJUSTMENT,CO,45,Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)
+wellcare,CO 16,DENIAL,CO,16,Claim/service lacks information or has submission/billing error(s). Usage: Do not use this code for claims attachment(s)/other documentation. At least one Remark Code must be provided (may be comprised of either the NCPDP Reject Reason Code, or Remittance Advice Remark Code that is not an ALERT.) Refer to the 835 Healthcare Policy Identification Segment (loop 2110 Service Payment Information REF), if present.
+wellcare,CO 97,DENIAL,CO,97,We do not consider payment for any portion of this service as it is incidental to other services provided to the patient for which reimbursement was, or will be, considered.
+wellcare,M51,REMARK,M51,,Missing/incomplete/invalid procedure code(s)
+UnitedHealthcare_2,807,DENIAL,CO,97,unbundled service
+UnitedHealthcare_2,1666,DENIAL,CO,246,This non-payable code is for required reporting only.
+NGS,253,ADJUSTMENT,CO,253,This adjustment in provider payment reflects recent changes made in CMS/Medicare reimbursement levels due to sequestration.
+NGS,45,ADJUSTMENT,CO,45,Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement. Usage: This adjustment amount cannot equal the total service or claim charge amount; and must not duplicate provider adjustment amounts (payments and contractual reductions) that have resulted from prior payer(s) adjudication. (Use only with Group Codes PR or CO depending upon liability)
+NGS,MA18,REMARK,MA18,,Alert: the claim information is also being forwarded to the patient's supplemental insurer.
+aetna,CO226,DENIAL,CO,226,Information requested from the Billing/Rendering Provider was not provided or not provided timely or was insufficient/incomplete.
+aetna,CO150,DENIAL,CO,150,Payer deems the information submitted does not support this level of service.

@@ -1,0 +1,44 @@
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\EdiFabric.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.AssemblyReference.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.GeneratedMSBuildEditorConfig.editorconfig
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfoInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfo.cs
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.CoreCompileInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Ed.26E9446E.Up2Date
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\EdiFabric.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.AssemblyReference.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfoInputs.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfo.cs
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.CoreCompileInputs.cache
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Ed.26E9446E.Up2Date
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\Anuraj Venkatpurwar\Downloads\edifabric.examples (2)\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\EdiFabric.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.AssemblyReference.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfoInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfo.cs
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.CoreCompileInputs.cache
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Ed.26E9446E.Up2Date
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\Anuraj Venkatpurwar\OneDrive - Xalta Technology Services Pvt Ltd\Desktop\EDI_835_Generator_Code_Copy\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\Xalta.Edi.LicenseProvider.pdb
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\bin\Release\net48\EdiFabric.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.AssemblyReference.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfoInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.AssemblyInfo.cs
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.csproj.CoreCompileInputs.cache
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Ed.26E9446E.Up2Date
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.dll
+C:\Users\anura\OneDrive\Desktop\NET 6\Xalta.Edi.LicenseProvider\obj\Release\net48\Xalta.Edi.LicenseProvider.pdb

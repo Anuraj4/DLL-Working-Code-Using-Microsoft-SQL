@@ -1,0 +1,12 @@
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Debug\net9.0\Xalta.Edi.LicenseProvider.deps.json
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Debug\net9.0\Xalta.Edi.LicenseProvider.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\bin\Debug\net9.0\Xalta.Edi.LicenseProvider.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.csproj.AssemblyReference.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.GeneratedMSBuildEditorConfig.editorconfig
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.AssemblyInfoInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.AssemblyInfo.cs
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.csproj.CoreCompileInputs.cache
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\refint\Xalta.Edi.LicenseProvider.dll
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\Xalta.Edi.LicenseProvider.pdb
+C:\Veradigm\EdiFabric New Zip\New Edi Fabric Workarround\edifabric.examples (8)\X12.NET\NET 6\Xalta.Edi.LicenseProvider\obj\Debug\net9.0\ref\Xalta.Edi.LicenseProvider.dll

@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;net9.0</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Edi.Generator835</RootNamespace>
+    <AssemblyName>Edi.Generator835</AssemblyName>
+
+      <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xalta.Edi.BalancingValidation\Xalta.Edi.BalancingValidation.csproj" />
+    <ProjectReference Include="..\Xalta.Edi.CodeCrossWalk\Xalta.Edi.CodeCrossWalk.csproj" />
+    <ProjectReference Include="..\Xalta.Edi.AddressParser\Xalta.Edi.AddressParser.csproj" />
+    <ProjectReference Include="..\Xalta.Edi.LicenseProvider\Xalta.Edi.LicenseProvider.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="Costura.Fody" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference> -->
+
+    <PackageReference Include="EdiFabric" Version="10.7.6" />
+    <PackageReference Include="EdiFabric.Templates.Hipaa" Version="2.7.6" />
+    <PackageReference Include="EdiFabric.Templates.X12" Version="2.7.6" />
+    <PackageReference Include="ExcelDataReader" Version="3.8.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <!-- <PackageReference Include="Fody" Version="6.9.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference> -->
+
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Polly" Version="8.6.5" />
+    <PackageReference Include="Serilog.Sinks.Map" Version="2.0.0" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.1" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+  </ItemGroup>
+
+  <!-- Embed CSV configs as content so they deploy alongside the DLL -->
+  <!-- <ItemGroup>
+    <None Include="FodyWeavers.xml" />
+    <None Update="Config\**\*.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\**\*.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup> -->
+
+</Project>
